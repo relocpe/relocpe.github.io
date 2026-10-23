@@ -102,3 +102,10 @@ sharp box, 1px border, scanlines + grain, RGB split / slice glitch + blinking cu
 from a 2048x1280 canvas. HTML cards visually hidden in GL mode (kept for keyboard / screen readers, focus highlights
 the panel); they stay the no-WebGL / no-JS fallback. Loader is a full-viewport opaque overlay (fixed, inset 0,
 100vw x 100vh/100dvh). Tests: test/test_v61.py -> shots/v6.1/.
+
+v6.2 (2026-10-23): liquid-glass 3D panels (opaque ShaderMaterial; backdrop = screen-space video at 1/4 res,
+5-pass kawase blur every 2nd frame, edge lens refraction + RGB dispersion, tilt-driven specular rim, ~55% smoked tint,
+soft dark bed under text). Light VHS in the FX pass (grain, ~1px chroma bleed, drifting tracking line, scanline hint,
+luma jitter; ?off=vhs disables). Sound: window capture listeners (pointerdown/mousedown/pointerup/touchend/keydown/click,
+wheel/scroll only with live activation), stays armed and retries; re-mutes playback if browser pauses unmuted element;
+"off" choice is session-only (old persisted sv.muted cleared).
