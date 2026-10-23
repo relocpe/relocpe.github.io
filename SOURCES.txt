@@ -1,0 +1,71 @@
+Background video (bg.mp4, poster.jpg)
+  Source: https://www.youtube.com/watch?v=AbxIGAk9JhI
+  Title/uploader: "SLAVE - LAST SUMMER" / SLAVE / CRIMECORE (YouTube), 1:59
+  License: standard YouTube license (NOT Creative Commons). Chosen by the site owner for a personal page.
+           Rights belong to the author; use only with their permission / at own risk.
+  Download: yt-dlp 2026.10.21, formats 136 (1280x720 h264 ~1.67 Mbps) + 140 (AAC 128k), remuxed with
+            ffmpeg -c copy -movflags +faststart (no re-encode). Full length, with audio. Size ~26 MB.
+  poster.jpg: frame at 00:04.5.
+
+Unused fallback (raw/stock-bg.mp4, raw/stock-poster.jpg)
+  Mixkit "Street below a peripheral in the city in black and white" (id 34556)
+  https://mixkit.co/free-stock-video/street-below-a-peripheral-in-the-city-in-black-and-34556/
+  License: Mixkit Stock Video Free License (free commercial/personal use). 720p, graded B&W, crossfade loop, no audio.
+
+Fonts: Google Fonts Anton, Space Mono (SIL OFL).
+Icons: inline SVG (Telegram/GitHub/Discord brand marks, hand-written paths).
+Discord presence: Lanyard API https://github.com/Phineas/lanyard (REST + WebSocket).
+
+
+=== v2 (y2k / drain redesign) ===
+Fonts (Google Fonts, SIL Open Font License 1.1):
+  - UnifrakturCook Bold (blackletter name, favicon, og-image) — https://fonts.google.com/specimen/UnifrakturCook
+  - Silkscreen (pixel labels/buttons) — https://fonts.google.com/specimen/Silkscreen
+  Anton / Space Mono are no longer used by the site.
+Sparkles, sigil/tribal divider, chrome ring, glossy buttons, scanlines, grain — hand-made inline SVG/CSS, no third-party assets.
+Icons (Telegram/GitHub/Discord) — inline SVG paths, as in v1.
+Discord avatar + avatar decoration — loaded live from Discord CDN via Lanyard data.
+og-image.png / favicons — rendered locally (tools/og.html, tools/icons.py) from a video frame + the fonts above.
+
+==================== v3 (guns.lol-style layout) ====================
+Layout/visual reference: the owner's own profile https://guns.lol/samevamp
+  (layout, sizes, colours re-measured from computed styles; no guns.lol logos,
+  branding or promo widget copied).
+Font: Satoshi (Variable, 300–900) by Indian Type Foundry, via Fontshare
+  https://www.fontshare.com/fonts/satoshi — ITF Free Font License (free for
+  personal and commercial use, web embedding allowed). Self-hosted: fonts/Satoshi-Variable.woff2
+cursor.png: the owner's own custom cursor, taken from their guns.lol profile.
+Icons (Telegram, GitHub, Discord, eye, speaker): simple hand-written SVG paths.
+Discord badge icon: loaded from cdn.discordapp.com (badge-icons) at runtime.
+FX layer: hand-written WebGL1 shader (no libraries) — cursor lens/chromatic
+  shift + click shockwave intro; inspired by the feel of activetheory.net, no code
+  or assets taken from it.
+favicon/og-image: regenerated (Satoshi 700 "s"; og = frame of bg.mp4 + name).
+
+
+==================== v4 (immersive WebGL) ====================
+Replaces v1-v3 entirely. Inspired by the feel of activetheory.net (dark WebGL scene, glass, bloom, loader -> enter);
+NO code, shaders, fonts, models, textures or images were copied from Active Theory.
+Engine: three.js r186 (MIT, https://threejs.org) - bundled with esbuild into app.js + js/*.js (license comment at end of files).
+  Uses three/addons: EffectComposer, RenderPass, UnrealBloomPass, OutputPass, ShaderPass, RoundedBoxGeometry (MIT).
+Fonts: Geist / Geist Mono variable (Vercel, SIL OFL 1.1, fonts/OFL-Geist.txt).
+Projects: projects.json generated at build time from the public GitHub API (api.github.com/users/samevamp/repos)
+  by tools/fetch_projects.py - forks, archived, empty repos and the profile repo are skipped.
+Discord presence: Lanyard API (REST + WebSocket), live in the browser.
+Shaders (video grade, bokeh particles, fog, labels, post FX: chromatic aberration, grain, vignette), favicon, icons
+and og-image are original, made for this site. og-image.png is a render of the site itself (?og mode).
+Background video: same bg.mp4 as before (see top of this file for its source/rights).
+
+==================== v5 ====================
+Title font: JetBrains Mono (Variable, 100–800, latin) by JetBrains — SIL Open Font License 1.1
+  https://www.jetbrains.com/lp/mono/ · npm @fontsource-variable/jetbrains-mono 5.3.0
+  Self-hosted: fonts/JetBrainsMono-Variable.woff2, licence: fonts/OFL-JetBrainsMono.txt
+Glass ring/torus around the name removed; title is now HTML text "<samevamp />" with a CSS caret.
+Background videos (config.js -> SV_VIDEOS; one picked at random per page load, ?bg=N forces one):
+  1. bg.mp4 / poster.jpg — "SLAVE - LAST SUMMER", SLAVE / CRIMECORE — https://www.youtube.com/watch?v=AbxIGAk9JhI (see top)
+  2. bg2.mp4 / poster2.jpg — "SLAVE - LA", SLAVE / CRIMECORE — https://www.youtube.com/watch?v=7ijx7OX4leI
+  3. bg3.mp4 / poster3.jpg — "SLAVE - F3TISH IN WEB3", SLAVE / CRIMECORE — https://www.youtube.com/watch?v=9wPjBj5iXds (age-restricted)
+  All: standard YouTube licence (not Creative Commons), chosen by the site owner; rights belong to the author.
+  Encode: tools/add-video.sh (720p H.264 + AAC 128k, faststart, full length with audio, ~20 MB target).
+  NOTE: 2 and 3 are not included yet — YouTube refused the download from the build machine
+  ("Sign in to confirm you're not a bot"; #3 also needs an age-verified login). Titles from YouTube oEmbed.

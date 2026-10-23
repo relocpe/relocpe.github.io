@@ -1,0 +1,32 @@
+[
+ {
+  "name": "Nimbus",
+  "description": "меню-бар для мака, обход блокировок discord/youtube",
+  "language": "C",
+  "stars": 0,
+  "url": "https://github.com/samevamp/Nimbus",
+  "updated": "2026-10-15T11:41:02Z",
+  "license": "MIT",
+  "topics": [
+   "discord",
+   "macos",
+   "youtube",
+   "zapret"
+  ]
+ },
+ {
+  "name": "Ya.Music-RPC",
+  "description": "discord rpc для яндекс музыки + мини-плеер в меню-баре",
+  "language": "Swift",
+  "stars": 0,
+  "url": "https://github.com/samevamp/Ya.Music-RPC",
+  "updated": "2026-10-15T11:39:06Z",
+  "license": "MIT",
+  "topics": [
+   "discord-rich-presence",
+   "macos",
+   "swift",
+   "yandex-music"
+  ]
+ }
+]
