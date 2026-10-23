@@ -94,3 +94,11 @@ v6 (2026-10-23, final polish)
 - bg3.mp4 re-encoded at 1920x1080 from the owner's higher-quality master (samevamp_site_video.mp4, same clip as before):
   x264 slow CRF 21, maxrate 4500k, faststart, AAC 160k; poster3.jpg re-cut from the master at 1920px.
   The WebGL video texture samples the full-res frame (LinearFilter, no mipmaps); canvas DPR cap raised to 1.5.
+
+v6.1 (2026-10-23): 3D project panels restored on the WebGL path (v5 arc/column layout, camera path, float, hover
+scale/tilt, raycast click -> repo, section glitch unchanged). Terminal look: opaque unlit ShaderMaterial face
+(transparent:false, depthWrite:true, renderOrder 2) -> no env reflections, identical in Chromium/WebKit at any angle;
+sharp box, 1px border, scanlines + grain, RGB split / slice glitch + blinking cursor on hover, JetBrains Mono text
+from a 2048x1280 canvas. HTML cards visually hidden in GL mode (kept for keyboard / screen readers, focus highlights
+the panel); they stay the no-WebGL / no-JS fallback. Loader is a full-viewport opaque overlay (fixed, inset 0,
+100vw x 100vh/100dvh). Tests: test/test_v61.py -> shots/v6.1/.
