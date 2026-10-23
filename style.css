@@ -41,8 +41,6 @@ body.entered .chrome{opacity:1;transform:none}
 .chrome>*{pointer-events:auto}
 .mark{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);padding:9px 0}
 .mark{text-transform:none;letter-spacing:.06em;color:var(--mid)}
-.mark-d{width:6px;height:6px;border-radius:50%;background:rgba(200,214,218,.35);transition:background .6s,box-shadow .6s}
-body.entered .mark-d{background:#8fd0c4;box-shadow:0 0 6px rgba(143,208,196,.5)}
 .onion{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:rgba(200,214,218,.5);text-shadow:0 0 6px #000,0 0 2px #000;text-align:center;margin-top:14px;white-space:nowrap}
 .chrome-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
 .pill{position:relative;display:flex;align-items:center;gap:0;padding:0 8px;height:38px;border-radius:99px;background:rgba(10,14,16,.55);border:1px solid rgba(255,255,255,.07);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
@@ -133,15 +131,17 @@ html.static .hud{display:none}
 html.gl body.hovering{cursor:pointer}
 
 /* ---------- static flow (no WebGL / reduced motion) ---------- */
-html.static #bgv{left:0;top:0;width:100vw;height:100vh;object-fit:contain;opacity:.42;z-index:0;filter:grayscale(.85) contrast(1.08)}
+html.static #bgv{left:0;top:0;width:100vw;height:100vh;object-fit:contain;opacity:1;z-index:0}
 #bgb{display:none}
-html.static #bgb{display:block;position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:0;pointer-events:none;opacity:.15;transform:scale(1.3)} /* 24px-wide canvas upscaled = heavy blur without a CSS filter */
+html.static #bgb{display:block;position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:0;pointer-events:none;opacity:.6;transform:scale(1.3)} /* 24px-wide canvas upscaled = heavy blur without a CSS filter */
 html.static.rm #bgb{display:none}
 html.static.rm #bgv{opacity:0}
-html.static.rm .poster{display:block;position:fixed;inset:0;background:var(--poster,url(poster.jpg)) center/contain no-repeat;opacity:.25;z-index:0;overflow:hidden;isolation:isolate}
-html.static.rm .poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster.jpg)) center/cover;filter:blur(26px) brightness(.42)}
-html.static body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.12) 2px 3px),radial-gradient(120% 90% at 50% 40%,transparent 45%,rgba(2,3,4,.7))}
+html.static.rm .poster{display:block;position:fixed;inset:0;background:var(--poster,url(poster.jpg)) center/contain no-repeat;opacity:.95;z-index:0;overflow:hidden;isolation:isolate}
+html.static.rm .poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster.jpg)) center/cover;filter:blur(26px) brightness(.75)}
+html.static body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(2,3,4,.12))}
 html.static main{position:relative;z-index:2}
+html.static .sec{text-shadow:0 1px 12px rgba(0,0,0,.75),0 0 2px rgba(0,0,0,.6)}
+html.static .work-col,html.static .s-contact>*{background:rgba(3,4,5,.42);border-radius:14px;padding:10px 16px}
 html.static .sec{min-height:100vh;padding:120px 30px 80px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:34px}
 html.static .name{font-size:clamp(28px,8vw,112px)}
 html.static .idx-scroll{display:flex;gap:12px;align-items:center}
