@@ -109,3 +109,5 @@ soft dark bed under text). Light VHS in the FX pass (grain, ~1px chroma bleed, d
 luma jitter; ?off=vhs disables). Sound: window capture listeners (pointerdown/mousedown/pointerup/touchend/keydown/click,
 wheel/scroll only with live activation), stays armed and retries; re-mutes playback if browser pauses unmuted element;
 "off" choice is session-only (old persisted sv.muted cleared).
+
+v6.3 (2026-10-23): monochrome chrome text gradient (canvas panel titles/descriptions + CSS background-clip:text on nick, active nav, mark, contact rows; drop-shadow filters); bolder scroll/swipe cue (3px line, 700 weight mono).
