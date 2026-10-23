@@ -33,6 +33,7 @@
 <script type="module" src="app.js"></script>
 </head>
 <body>
+<canvas id="bgb" width="24" height="14" aria-hidden="true"></canvas>
 <video id="bgv" muted autoplay loop playsinline preload="auto" aria-hidden="true"></video>
 <script>(function(){var L=(window.SV_VIDEOS||[]).filter(function(x){return x&&x.src});if(!L.length)L=[{src:"bg.mp4",poster:"poster.jpg"}];var q=new URLSearchParams(location.search),i=parseInt(q.get("bg"),10);var b=L[i>=0&&i<L.length?i:Math.floor(Math.random()*L.length)];var v=document.getElementById("bgv");if(b.poster){v.poster=b.poster;document.documentElement.style.setProperty("--poster","url("+b.poster+")")}v.src=b.src;window.SV_BG=b})()</script>
 <div class="poster" aria-hidden="true"></div>
@@ -61,32 +62,25 @@
       <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       <span class="sound-l">sound</span><span class="sound-s" id="soundState">off</span>
     </button>
-    <p class="snd-hint" id="sndHint" aria-live="polite"><span class="br">//</span> <span id="sndHintT">click anywhere for sound</span></p>
+    <p class="snd-hint" id="sndHint" aria-label="click anywhere for sound"><span class="br" aria-hidden="true">//</span> <span aria-hidden="true">sound</span></p>
   </div>
 </header>
 
 <main id="content">
   <section class="sec s-index" id="index" data-i="0">
     <h1 class="name" aria-label="samevamp"><span class="br" aria-hidden="true">&lt;</span><span class="nm" id="nameTxt" aria-hidden="true">samevamp</span><i class="caret" aria-hidden="true"></i><span class="br" aria-hidden="true">&nbsp;/&gt;</span></h1>
-    <div class="idx-meta">
-      <p class="k">( 01 ) &nbsp;index</p>
-      <p class="t">personal site — projects, contacts, live discord.</p>
-    </div>
-    <div class="idx-scroll"><span class="k">scroll</span><span class="idx-line"></span></div>
   </section>
 
   <section class="sec s-work" id="work" data-i="1">
     <div class="work-col">
-      <p class="k">( 02 ) &nbsp;selected work</p>
-      <h2 class="h">what i build</h2>
+      <h2 class="sr">work</h2>
       <ol class="plist" id="plist"></ol>
-      <p class="k dim work-hint" id="workHint">hover a panel — click to open on github</p>
     </div>
   </section>
 
   <section class="sec s-contact" id="contact" data-i="2">
     <div class="ct-col">
-      <p class="k">( 03 ) &nbsp;contact</p>
+      <h2 class="sr">contact</h2>
       <ul class="ct">
         <li><a href="https://t.me/autostack" target="_blank" rel="noopener"><span class="k">telegram</span><span class="ct-v">@autostack</span><span class="ct-a">↗</span></a></li>
         <li><a href="https://t.me/portfade" target="_blank" rel="noopener"><span class="k">telegram</span><span class="ct-v">@portfade</span><span class="ct-a">↗</span></a></li>
@@ -109,11 +103,6 @@
   </section>
 </main>
 
-<footer class="hud" aria-hidden="true">
-  <span class="k"><b id="hudIdx">01</b> / 03</span>
-  <span class="hud-track"><i id="hudBar"></i></span>
-  <span class="k" id="hudName">index</span>
-</footer>
 <div class="tip" id="tip" role="tooltip"></div>
 <div class="toast" id="toast" role="status"></div>
 <noscript><style>.loader{display:none}</style></noscript>

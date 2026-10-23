@@ -67,5 +67,5 @@ Background videos (config.js -> SV_VIDEOS; one picked at random per page load, ?
   3. bg3.mp4 / poster3.jpg — "SLAVE - F3TISH IN WEB3", SLAVE / CRIMECORE — https://www.youtube.com/watch?v=9wPjBj5iXds (age-restricted)
   All: standard YouTube licence (not Creative Commons), chosen by the site owner; rights belong to the author.
   Encode: tools/add-video.sh (720p H.264 + AAC 128k, faststart, full length with audio, ~20 MB target).
-  NOTE: 2 and 3 are not included yet — YouTube refused the download from the build machine
-  ("Sign in to confirm you're not a bot"; #3 also needs an age-verified login). Titles from YouTube oEmbed.
+  2 and 3 are included (files supplied by the site owner; YouTube refused a direct download from the build machine).
+  bg2.mp4 is 878x720 (non-16:9) — v5.1 shows every video uncropped ("contain") over a blurred, darkened copy of itself.
