@@ -69,3 +69,9 @@ Background videos (config.js -> SV_VIDEOS; one picked at random per page load, ?
   Encode: tools/add-video.sh (720p H.264 + AAC 128k, faststart, full length with audio, ~20 MB target).
   2 and 3 are included (files supplied by the site owner; YouTube refused a direct download from the build machine).
   bg2.mp4 is 878x720 (non-16:9) — v5.1 shows every video uncropped ("contain") over a blurred, darkened copy of itself.
+
+==================== v5.3 ====================
+Overlay reworked into a single post pass (original shader): cold near-monochrome teal-grey grade, thin CRT scanlines
+with slow roll, fine mono noise, rare one-line tear, stronger vignette. Bloom, fog, bokeh and chromatic aberration removed
+(UnrealBloomPass no longer used). Particles are small sharp dust only.
+Project panels show only name, a short description (projects.json; manual overrides in tools/fetch_projects.py) and ↗.

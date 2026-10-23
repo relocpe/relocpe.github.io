@@ -1,7 +1,7 @@
 [
  {
   "name": "Nimbus",
-  "description": "меню-бар для мака, обход блокировок discord/youtube",
+  "description": "запрет в меню-баре. дискорд и ютуб без впн",
   "language": "C",
   "stars": 0,
   "url": "https://github.com/samevamp/Nimbus",
@@ -16,7 +16,7 @@
  },
  {
   "name": "Ya.Music-RPC",
-  "description": "discord rpc для яндекс музыки + мини-плеер в меню-баре",
+  "description": "что играет в я.музыке — в статус дискорда",
   "language": "Swift",
   "stars": 0,
   "url": "https://github.com/samevamp/Ya.Music-RPC",
