@@ -26,13 +26,8 @@ html.static #gl{display:none}
 .loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:#000;transition:background 1.2s var(--ease),opacity 1s var(--ease),visibility 0s 1s}
 .loader.ready{background:rgba(0,0,0,0);pointer-events:none}
 .loader.out{opacity:0;visibility:hidden;pointer-events:none}
-.ld-ring{position:relative;width:min(220px,52vw);aspect-ratio:1;transition:transform 1.4s var(--ease),opacity .8s var(--ease)}
-.loader.ready .ld-ring{transform:scale(.86);opacity:.0}
-.ld-ring svg{width:100%;height:100%;transform:rotate(-90deg);overflow:visible}
-.ld-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:.6}
-.ld-bar{fill:none;stroke:var(--acc);stroke-width:1.1;stroke-dasharray:1;stroke-dashoffset:1;filter:drop-shadow(0 0 4px rgba(159,232,255,.9));stroke-linecap:round}
-.ld-pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--fg);grid-auto-flow:column;justify-content:center;gap:2px}
-.ld-sl{color:var(--acc)}
+.ld-log{width:min(460px,86vw);min-height:9.5em;margin:0;font-family:var(--mono);font-size:12px;line-height:1.6;color:rgba(200,214,218,.62);white-space:pre-wrap;word-break:break-word;transition:opacity .6s var(--ease)}
+.loader.ready .ld-log{opacity:0;transition-delay:.35s}
 .snd-hint{margin:0;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.02em;color:rgba(238,244,245,.5);white-space:nowrap;opacity:0;transform:translateY(-3px);transition:opacity .9s var(--ease),transform .9s var(--ease);pointer-events:none}
 .snd-hint .br{color:rgba(238,244,245,.26)}
 .snd-hint.on{opacity:1;transform:none;animation:sndp 2.6s ease-in-out infinite}
@@ -45,7 +40,10 @@ html.static #gl{display:none}
 body.entered .chrome{opacity:1;transform:none}
 .chrome>*{pointer-events:auto}
 .mark{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);padding:9px 0}
-.mark-o{width:14px;height:14px;border-radius:50%;border:1px solid var(--fg);box-shadow:0 0 10px rgba(159,232,255,.55),inset 0 0 6px rgba(159,232,255,.4)}
+.mark{text-transform:none;letter-spacing:.06em;color:var(--mid)}
+.mark-d{width:6px;height:6px;border-radius:50%;background:rgba(200,214,218,.35);transition:background .6s,box-shadow .6s}
+body.entered .mark-d{background:#8fd0c4;box-shadow:0 0 6px rgba(143,208,196,.5)}
+.onion{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:rgba(200,214,218,.5);text-shadow:0 0 6px #000,0 0 2px #000;text-align:center;margin-top:14px;white-space:nowrap}
 .chrome-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
 .pill{position:relative;display:flex;align-items:center;gap:0;padding:0 8px;height:38px;border-radius:99px;background:rgba(10,14,16,.55);border:1px solid rgba(255,255,255,.07);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
 .pill a{position:relative;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);padding:0 14px;height:100%;display:flex;align-items:center;transition:color .5s var(--ease)}
@@ -113,6 +111,7 @@ html.gl .sec.act a,html.gl .sec.act button,html.gl .sec.act .presence{pointer-ev
 html.gl .name{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%)}
 html.gl .name::before{content:"";position:absolute;left:50%;top:50%;width:150%;height:360%;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(2,4,5,.62),rgba(2,4,5,.34) 55%,rgba(2,4,5,0))}
 html.gl .idx-meta{position:absolute;left:30px;bottom:86px}
+html.gl .onion{position:absolute;left:50%;top:calc(50% + clamp(24px,4.4vw,58px));transform:translateX(-50%);margin:0}
 html.gl .idx-scroll{position:absolute;right:30px;bottom:86px;display:flex;align-items:center;gap:12px}
 .idx-line{width:56px;height:1px;background:linear-gradient(90deg,var(--acc),transparent);transform-origin:left;animation:sl 2.4s var(--ease) infinite}
 @keyframes sl{0%{transform:scaleX(0);opacity:1}70%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
@@ -134,14 +133,14 @@ html.static .hud{display:none}
 html.gl body.hovering{cursor:pointer}
 
 /* ---------- static flow (no WebGL / reduced motion) ---------- */
-html.static #bgv{left:0;top:0;width:100vw;height:100vh;object-fit:contain;opacity:.3;z-index:0;filter:grayscale(.85)}
+html.static #bgv{left:0;top:0;width:100vw;height:100vh;object-fit:contain;opacity:.42;z-index:0;filter:grayscale(.85) contrast(1.08)}
 #bgb{display:none}
 html.static #bgb{display:block;position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;z-index:0;pointer-events:none;opacity:.15;transform:scale(1.3)} /* 24px-wide canvas upscaled = heavy blur without a CSS filter */
 html.static.rm #bgb{display:none}
 html.static.rm #bgv{opacity:0}
 html.static.rm .poster{display:block;position:fixed;inset:0;background:var(--poster,url(poster.jpg)) center/contain no-repeat;opacity:.25;z-index:0;overflow:hidden;isolation:isolate}
 html.static.rm .poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster.jpg)) center/cover;filter:blur(26px) brightness(.42)}
-html.static body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.16) 2px 3px),radial-gradient(110% 80% at 50% 40%,transparent 35%,rgba(2,3,4,.9))}
+html.static body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.12) 2px 3px),radial-gradient(120% 90% at 50% 40%,transparent 45%,rgba(2,3,4,.7))}
 html.static main{position:relative;z-index:2}
 html.static .sec{min-height:100vh;padding:120px 30px 80px;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;gap:34px}
 html.static .name{font-size:clamp(28px,8vw,112px)}

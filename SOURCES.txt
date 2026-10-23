@@ -75,3 +75,8 @@ Overlay reworked into a single post pass (original shader): cold near-monochrome
 with slow roll, fine mono noise, rare one-line tear, stronger vignette. Bloom, fog, bokeh and chromatic aberration removed
 (UnrealBloomPass no longer used). Particles are small sharp dust only.
 Project panels show only name, a short description (projects.json; manual overrides in tools/fetch_projects.py) and ↗.
+
+==================== v5.4 ====================
+Brighter grade (~1.4x v5.3), weaker vignette. Terminal-style loader log (text modeled on Tor's bootstrap messages,
+written from scratch, shows real load progress). Decorative fake .onion line under the title; "tor: connected" status mark.
+Section switches trigger a ~220ms horizontal tear + RGB split inside the same post pass (disabled with reduced motion).
