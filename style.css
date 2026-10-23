@@ -59,8 +59,7 @@ body.entered .chrome,html.static .chrome{opacity:1}
 .lbl{font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:16px;text-shadow:var(--ts-s)}
 .arr{display:inline-block;font-family:var(--sans);font-size:14px;line-height:1;font-weight:400;color:var(--mid);transition:color 160ms ease,transform 160ms ease}
 
-.name{position:relative;font-family:var(--code);font-weight:500;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-size:clamp(40px,7vw,96px);color:#F2F2F2;font-variant-ligatures:none;text-shadow:0 1px 12px rgba(0,0,0,.6);text-align:center}
-.name::before{content:"";position:absolute;left:50%;top:50%;width:140%;height:340%;transform:translate(-50%,-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,.32) 55%,rgba(0,0,0,0))}
+.name{position:relative;font-family:var(--code);font-weight:500;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-size:clamp(40px,7vw,96px);color:#F2F2F2;font-variant-ligatures:none;text-shadow:0 1px 2px rgba(0,0,0,.35);text-align:center}
 .name .br{color:rgba(255,255,255,.35)}
 .name .br-c{margin-left:.32em}
 .name .nm{color:#F2F2F2}
