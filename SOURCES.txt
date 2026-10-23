@@ -88,5 +88,9 @@ v6 (2026-10-23, final polish)
   transparent sort order vs. the black halo plane, the env-strip reflection on the arc-rotated left card and the
   browser/GPU blend path, so in Safari/WebKit the left card rendered as near-clear glass. Now both cards share one
   CSS end state: rgba(14,14,16,.72) + 1px rgba(255,255,255,.08), identical in GL and no-GL modes.
-- New video: tools/add-video.sh <file|url> [poster_sec]  (auto N, up to 1080p, MB=40 target, rewrites config.js;
-  APPEND=1 to keep the old one in the random pool). Then sync + commit + push.
+- New video: tools/add-video.sh <file|url> [poster_sec]  (auto N, up to 1080p, CRF 21 / maxrate 4500k, AAC 160k,
+  rewrites config.js + the no-JS poster fallback; APPEND=1 keeps the old one in the random pool; MB=.. for a size target).
+  Then sync + commit + push.
+- bg3.mp4 re-encoded at 1920x1080 from the owner's higher-quality master (samevamp_site_video.mp4, same clip as before):
+  x264 slow CRF 21, maxrate 4500k, faststart, AAC 160k; poster3.jpg re-cut from the master at 1920px.
+  The WebGL video texture samples the full-res frame (LinearFilter, no mipmaps); canvas DPR cap raised to 1.5.

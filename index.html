@@ -35,7 +35,7 @@
 <body>
 <canvas id="bgb" width="24" height="14" aria-hidden="true"></canvas>
 <video id="bgv" muted autoplay loop playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
-<script>(function(){var L=(window.SV_VIDEOS||[]).filter(function(x){return x&&x.src});if(!L.length)L=[{src:"bg.mp4",poster:"poster.jpg"}];var q=new URLSearchParams(location.search),i=parseInt(q.get("bg"),10);var b=L[i>=0&&i<L.length?i:Math.floor(Math.random()*L.length)];var v=document.getElementById("bgv");if(b.poster){v.poster=b.poster;document.documentElement.style.setProperty("--poster","url("+b.poster+")")}v.muted=true;v.src=b.src;window.SV_BG=b})()</script>
+<script>(function(){var L=(window.SV_VIDEOS||[]).filter(function(x){return x&&x.src});if(!L.length)L=[{src:"bg.mp4",poster:"poster.jpg"}];var q=new URLSearchParams(location.search),i=parseInt(q.get("bg"),10);var b=L[i>=0&&i<L.length?i:Math.floor(Math.random()*L.length)];var v=document.getElementById("bgv");if(b.poster){v.poster=b.poster;document.documentElement.style.setProperty("--poster","url("+b.poster+")")}v.muted=true;var sm=b.srcSmall&&q.get("hq")!=="1"&&((matchMedia("(pointer:coarse)").matches&&Math.min(screen.width,screen.height)<=820)||(navigator.connection&&navigator.connection.saveData));v.src=sm?b.srcSmall:b.src;window.SV_BG=b})()</script>
 <div class="poster" aria-hidden="true"></div>
 <canvas id="gl" aria-hidden="true"></canvas>
 
