@@ -7,7 +7,7 @@ window.SV_DISCORD_ID = DISCORD_ID;
 window.SV_PRESENCE_URL = "https://samevamp-presence.samevamp.workers.dev/presence";
 window.SV_AVATAR_URL = "https://samevamp-presence.samevamp.workers.dev/avatar";   // "" = cdn.discordapp.com directly
 window.SV_IMG_URL = "https://samevamp-presence.samevamp.workers.dev/img";   // activity images proxy (/img?u=); "" = load discord/spotify image hosts directly
-window.SV_DISCORD_HANDLE = "m.soundcloud";
+window.SV_DISCORD_HANDLE = "relocpe";
 
 // Background videos: one is picked at random on every page load (with its poster).
 // tools/add-video.sh encodes a file and rewrites this list. srcSmall (optional) = 720p copy for phones / data-saver. Keep each well under 100 MB (GitHub Pages).
