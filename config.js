@@ -9,3 +9,9 @@ window.SV_VIDEOS = [
   // { src: "bg2.mp4", poster: "poster2.jpg" },   // removed by user
   { src: "bg3.mp4", srcSmall: "bg3-720.mp4", poster: "poster3.jpg" },   // SLAVE - LA, 1080p master (phones get the 720p file)
 ];
+
+// Telegram: one account, several handles. PRIMARY gets the bright "write" button; the rest are shown as "aka" aliases.
+window.SV_TELEGRAM = { primary: "autostack", aliases: ["portfade"] };
+
+// Stack line under the work panels ("stack: a / b / c"). Edit freely; an empty list hides the line.
+window.SV_STACK = ["swift", "swiftui", "appkit", "c", "shell", "javascript", "three.js", "glsl", "github actions"];

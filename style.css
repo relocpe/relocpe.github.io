@@ -171,3 +171,64 @@ body.entered .cue{opacity:1}
 .cue-t i{width:3px;height:13px;border-radius:2px;animation-name:cuet2}
 @keyframes cuet2{0%{transform:translateY(-13px)}100%{transform:translateY(36px)}}
 @media (max-width:720px){.cue-l{font-size:15px}}
+
+/* ---------- v6.7 ---------- */
+/* links: light hover / keyboard focus, same in every mode */
+.nav a{border-radius:2px;transition:color 160ms ease,background-color 160ms ease}
+.nav a:hover,.nav a:focus-visible{color:#fff;background:rgba(255,255,255,.07)}
+.nav a:focus-visible{outline-offset:-1px}
+.ct-v{text-decoration:underline 1px transparent;text-underline-offset:6px;transition:color 160ms ease,text-decoration-color 160ms ease}
+.ct-v:hover,.ct-v:focus-visible{text-decoration-color:rgba(255,255,255,.55)}
+.ct-copy:hover,.ct-copy:focus-visible{text-decoration-color:rgba(255,255,255,.55)}
+/* contacts: telegram is the primary (brightest + "write"), the rest step back */
+.ct-row:not(.ct-main) .ct-v{color:rgba(242,242,242,.8)}
+.ct-row:not(.ct-main) .ct-v:hover,.ct-row:not(.ct-main) .ct-v:focus-visible{color:var(--fg)}
+.ct-main .ct-k{color:rgba(242,242,242,.82)}
+.ct-pri{color:#fff;font-weight:600}
+.ct-write{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 14px;border:1px solid rgba(255,255,255,.72);border-radius:2px;background:rgba(0,0,0,.28);font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:#fff;text-shadow:var(--ts-t);transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease}
+.ct-write .arr{font-size:13px;color:inherit;transform:none}
+.ct-write:hover,.ct-write:focus-visible{background:#f2f2f2;color:#050506;border-color:#f2f2f2;text-shadow:none}
+.ct-alias{font-family:var(--mono);font-size:13px;color:var(--mid);text-shadow:var(--ts-s)}
+.ct-alias a{color:rgba(242,242,242,.78);text-decoration:underline 1px transparent;text-underline-offset:4px;transition:color 160ms ease,text-decoration-color 160ms ease}
+.ct-alias a:hover,.ct-alias a:focus-visible{color:#fff;text-decoration-color:rgba(255,255,255,.55)}
+/* stack line (work section, from config.js SV_STACK) */
+.s-work{position:relative}
+.stack{position:absolute;left:50%;transform:translateX(-50%);bottom:32px;width:max-content;max-width:calc(100% - 2 * var(--side));padding:7px 14px;border-radius:2px;background:rgba(10,10,12,.58);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);text-align:center;font-family:var(--mono);font-size:13px;line-height:1.6;letter-spacing:.02em;color:rgba(242,242,242,.82);text-shadow:var(--ts-s)}
+.stack-k{color:var(--mid)}
+.stack[hidden]{display:none}
+/* HTML cards (static flow / keyboard list): preview or monogram + meta line + longer description */
+.card{flex-direction:row;align-items:flex-start;gap:16px}
+.card-b{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.card-pv{flex:none;width:64px;height:64px;border:1px solid rgba(255,255,255,.18);border-radius:2px;object-fit:cover;object-position:50% 30%;filter:grayscale(1);background:rgba(255,255,255,.04)}
+.card-mono{display:flex;align-items:center;justify-content:center;font-family:var(--code);font-size:22px;font-weight:500;color:rgba(242,242,242,.85)}
+.card-m{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--mid)}
+.cards{max-width:960px}
+.card-d{-webkit-line-clamp:4}
+/* appear: static flow cards stagger in when the section scrolls into view (JS adds .cards-a / .in; no JS = no animation) */
+@media (prefers-reduced-motion:no-preference){
+  .cards.cards-a li{opacity:0;transform:translateY(14px)}
+  .cards.cards-a.in li{opacity:1;transform:none;transition:opacity .5s var(--ease),transform .5s var(--ease)}
+  .cards.cards-a.in li:nth-child(2){transition-delay:90ms}
+  .cards.cards-a.in li:nth-child(3){transition-delay:180ms}
+  .cards.cards-a.in li:nth-child(4){transition-delay:270ms}
+}
+/* type: labels 13px, small mono 12px+, body 14px+ */
+.lbl,.ct-k{font-size:13px}
+.pr-st{font-size:12px}
+.pr-sub{font-size:13px}
+@media (max-width:720px){
+  .nav a{font-size:12px;padding:0 8px}
+  .sound{font-size:12px}
+  .card-m{font-size:13px}
+  .card{gap:14px;padding:18px}
+  .card-pv{width:52px;height:52px}
+  .card-mono{font-size:18px}
+  .card-d{-webkit-line-clamp:4}
+  .ct-main .ct-vs{flex-wrap:wrap;row-gap:2px}
+  .ct-main{padding:4px 0 10px}
+  .ct-alias{flex-basis:100%;font-size:13px}
+  .ct-write{min-height:40px}
+  .stack{left:var(--side);right:var(--side);transform:none;width:auto;max-width:none;bottom:calc(20px + env(safe-area-inset-bottom));line-height:1.55}
+  html.gl .s-work{padding-bottom:96px}
+}
+@media (max-width:380px){.nav a{padding:0 6px}}
