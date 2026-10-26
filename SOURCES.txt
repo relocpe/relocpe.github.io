@@ -126,3 +126,6 @@ v7.1 (2026-10-26): contact card renders ALL Discord activities (custom status as
   GitHub account renamed samevamp -> relocpe: site moved to https://relocpe.github.io/, repo/contact/canonical/og URLs updated, nick now <relocpe />;
   og-image.png = previous frame with the old text inpainted + new name in the .name style (tools/og-name.html, tools/og-bg.png).
   Worker ALLOW_ORIGINS = https://relocpe.github.io,https://samevamp.github.io.
+v7.2 (2026-10-26): browser tab title is "<relocpe />" (static <title>&lt;relocpe /&gt;</title> for crawlers/no-JS) and scrambles like the nick
+  (same ASCII glyph set !<>-_\/[]{}=+*^?#01x%&$, 38ms stagger, 260-520ms settle, every 2-3s, ~16 title updates/s only during the scramble,
+  idle otherwise); stops and restores the exact title while the tab is hidden; static under prefers-reduced-motion. Nothing else changed.
