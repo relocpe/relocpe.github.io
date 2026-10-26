@@ -247,8 +247,10 @@ body.entered .cue{opacity:1}
 /* v6.9: contacts without the frosted slab; stronger local text shadow, light rules, light glass presence card */
 .ct{border-top-color:rgba(255,255,255,.2)}
 .ct-row{border-bottom-color:rgba(255,255,255,.2)}
-.s-contact{--ts-t:0 0 1px rgba(0,0,0,.6),0 1px 3px rgba(0,0,0,.55),0 0 16px rgba(0,0,0,.4);--ts-s:0 0 1px rgba(0,0,0,.7),0 1px 3px rgba(0,0,0,.6),0 0 12px rgba(0,0,0,.45)}
+.s-contact{--ts-t:0 0 2px rgba(0,0,0,.85),0 0 6px rgba(0,0,0,.5),0 1px 18px rgba(0,0,0,.45);--ts-s:0 0 2px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.7),0 1px 14px rgba(0,0,0,.55)}
+.s-contact .ct-row:not(.ct-main) .ct-v{color:rgba(246,246,246,.94)}
+.s-contact .ct-alias a{color:rgba(246,246,246,.9)}
 .ct-k{color:rgba(242,242,242,.78)}
-.ct-write{background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(8px) brightness(.85);backdrop-filter:blur(8px) brightness(.85)}
-.presence{background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05) 55%,rgba(255,255,255,.08)),rgba(28,28,32,.22);border-color:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(14px) saturate(1.35) brightness(.78);backdrop-filter:blur(14px) saturate(1.35) brightness(.78);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
-.pr-st,.pr-sub{color:rgba(236,236,240,.8)}
+.ct-write{background:rgba(0,0,0,.16);-webkit-backdrop-filter:blur(8px) brightness(.85);backdrop-filter:blur(8px) brightness(.85)}
+.presence{background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.05) 55%,rgba(255,255,255,.08)),rgba(24,24,28,.3);border-color:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(14px) saturate(1.3) brightness(.66);backdrop-filter:blur(14px) saturate(1.3) brightness(.66);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.pr-st,.pr-sub{color:rgba(240,240,244,.88)}
