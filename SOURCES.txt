@@ -49,7 +49,7 @@ NO code, shaders, fonts, models, textures or images were copied from Active Theo
 Engine: three.js r186 (MIT, https://threejs.org) - bundled with esbuild into app.js + js/*.js (license comment at end of files).
   Uses three/addons: EffectComposer, RenderPass, UnrealBloomPass, OutputPass, ShaderPass, RoundedBoxGeometry (MIT).
 Fonts: Geist / Geist Mono variable (Vercel, SIL OFL 1.1, fonts/OFL-Geist.txt).
-Projects: projects.json generated at build time from the public GitHub API (api.github.com/users/samevamp/repos)
+Projects: projects.json generated at build time from the public GitHub API (api.github.com/users/relocpe/repos (account renamed samevamp -> relocpe in v7.1))
   by tools/fetch_projects.py - forks, archived, empty repos and the profile repo are skipped.
 Discord presence: Lanyard API (REST + WebSocket), live in the browser.
 Shaders (video grade, bokeh particles, fog, labels, post FX: chromatic aberration, grain, vignette), favicon, icons
@@ -120,3 +120,9 @@ v6.8 (2026-10-26): project panels → light liquid glass (clear blurred/refracte
 v6.9 (2026-10-26): cursor lens (noise + RGB split, speed-driven) and shader glitch-dissolve section transition in the fx pass; mouse parallax tilt/depth; nav without pill; contacts without slab; no new assets.
 v7.0 (2026-10-26): bg3.mp4 / bg3-720.mp4 re-encoded from the same 1080p50 master (samevamp_site_video.mp4, itself YouTube-derived; true max source = 1080p50, no 4K/1440p exists):
   1080: hqdn3d=1:1:2:2 + unsharp 0.65, x264 slower CRF18 cap 7 Mbps, High@4.2 yuv420p faststart, AAC copied. 720: lanczos, unsharp 0.4, CRF20 cap 3.2 Mbps. No AI upscaling.
+v7.1 (2026-10-26): contact card renders ALL Discord activities (custom status as its own line; each activity: kind + name, details/state,
+  live elapsed timer or music progress bar, large image via the Worker /img proxy [allowlist: media.discordapp.net, cdn.discordapp.com, i.scdn.co],
+  app monogram fallback; max 3 shown + "+N more"). Telegram primary -> @relocpe (alias @portfade kept; @autostack dropped - no longer resolves).
+  GitHub account renamed samevamp -> relocpe: site moved to https://relocpe.github.io/, repo/contact/canonical/og URLs updated, nick now <relocpe />;
+  og-image.png = previous frame with the old text inpainted + new name in the .name style (tools/og-name.html, tools/og-bg.png).
+  Worker ALLOW_ORIGINS = https://relocpe.github.io,https://samevamp.github.io.

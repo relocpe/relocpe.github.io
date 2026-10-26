@@ -6,6 +6,7 @@ window.SV_DISCORD_ID = DISCORD_ID;
 // If the proxy is unreachable the site falls back to api.lanyard.rest directly, then to the local card (assets/discord-avatar.png + handle).
 window.SV_PRESENCE_URL = "https://samevamp-presence.samevamp.workers.dev/presence";
 window.SV_AVATAR_URL = "https://samevamp-presence.samevamp.workers.dev/avatar";   // "" = cdn.discordapp.com directly
+window.SV_IMG_URL = "https://samevamp-presence.samevamp.workers.dev/img";   // activity images proxy (/img?u=); "" = load discord/spotify image hosts directly
 window.SV_DISCORD_HANDLE = "m.soundcloud";
 
 // Background videos: one is picked at random on every page load (with its poster).
@@ -17,7 +18,7 @@ window.SV_VIDEOS = [
 ];
 
 // Telegram: one account, several handles. PRIMARY gets the bright "write" button; the rest are shown as "aka" aliases.
-window.SV_TELEGRAM = { primary: "autostack", aliases: ["portfade"] };
+window.SV_TELEGRAM = { primary: "relocpe", aliases: ["portfade"] };
 
 // Stack line under the work panels ("stack: a / b / c"). Edit freely; an empty list hides the line.
 window.SV_STACK = ["swift", "swiftui", "appkit", "c", "shell", "javascript", "three.js", "glsl", "github actions"];
