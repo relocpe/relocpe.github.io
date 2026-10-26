@@ -1,6 +1,12 @@
 // Discord user id for the live Lanyard presence (https://github.com/Phineas/lanyard)
 const DISCORD_ID = "1095706197081993279";
 window.SV_DISCORD_ID = DISCORD_ID;
+// Presence: our Cloudflare Worker proxy (worker/ — Lanyard REST + avatar; works where discord/lanyard are blocked).
+// SV_PRESENCE_URL returns Lanyard JSON ({ success, data }); a URL ending in "/" gets the id appended (e.g. "https://api.lanyard.rest/v1/users/").
+// If the proxy is unreachable the site falls back to api.lanyard.rest directly, then to the local card (assets/discord-avatar.png + handle).
+window.SV_PRESENCE_URL = "https://samevamp-presence.samevamp.workers.dev/presence";
+window.SV_AVATAR_URL = "https://samevamp-presence.samevamp.workers.dev/avatar";   // "" = cdn.discordapp.com directly
+window.SV_DISCORD_HANDLE = "m.soundcloud";
 
 // Background videos: one is picked at random on every page load (with its poster).
 // tools/add-video.sh encodes a file and rewrites this list. srcSmall (optional) = 720p copy for phones / data-saver. Keep each well under 100 MB (GitHub Pages).
