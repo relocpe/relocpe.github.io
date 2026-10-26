@@ -133,3 +133,11 @@ v7.3 (2026-10-26): section transition = camera push (replaces the v6.8 glitch: r
   0.85 s bell; camera zoom up to 1.085 (eases back at 0.6), 14-tap radial zoom blur in the fx pass (luminance only, VHS chroma bleed muted
   while blurring), outgoing HTML scales 1->1.07 + blur(<=5px), incoming 0.95->1 (slow-in / long-settle easing). Panel appear glitch kick off
   (hover glitch kick unchanged). ?off=tr disables it; prefers-reduced-motion keeps the plain crossfade. Prototype flag ?tr removed. No new assets.
+v7.4 (2026-10-26): panels fly in from depth on work by default (and fly back out into depth on leaving - fixes the white slab seen
+  mid-transition to contact); nick letters react to the cursor by default (off on touch / before the first mouse move) with a longer depth
+  scatter when leaving index; the hover/lens point field from the idea-2 prototype is dropped (?off=fly / ?off=nick disable the two).
+  Portrait video: cover, horizontally aimed at the subject by a 50-shot focus track (src/focus.js, built offline from YuNet face
+  detections per shot; no new assets). Nick sits above the boot log from the first paint, scramble starts ~1.2 s in. Subtitle under the
+  nick (18/17 px mono, lowercase). Small text >= 13 px with more contrast; all text-shadows removed in favour of local scrims.
+  Contact rows in the same glass as the discord card. Work cards placed off the subject (two wide columns on desktop, lower stack on
+  mobile). Nimbus keeps its placeholder preview (no real screenshot exists). Reduced motion unchanged (static).
