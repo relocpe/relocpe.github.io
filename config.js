@@ -15,7 +15,8 @@ window.SV_VIDEOS = [
   // { src: "bg.mp4", poster: "poster.jpg" },   // SLAVE - LAST SUMMER (removed by user)
   // { src: "bg2.mp4", poster: "poster2.jpg" },   // removed by user
   // { src: "bg3.mp4", srcSmall: "bg3-720.mp4", poster: "poster3.jpg" },   // replaced in v7.5
-  { src: "bg4.mp4", srcSmall: "bg4-720.mp4", poster: "poster4.jpg" },   // v7.5: owner's new video, 1080p25 upscaled to 2560x1440 (phones get the 720p file)
+  // { src: "bg4.mp4", srcSmall: "bg4-720.mp4", poster: "poster4.jpg" },   // v7.5, replaced by the trimmed copy in v7.6
+  { src: "bg5.mp4", srcSmall: "bg5-720.mp4", poster: "poster5.jpg" },   // v7.6: bg4 with the first 21.76 s cut (on a scene change), 2560x1440 25 fps
 ];
 
 // Telegram: one account, several handles. PRIMARY gets the bright "write" button; the rest are shown as "aka" aliases.

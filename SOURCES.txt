@@ -170,3 +170,9 @@ Fix — liquid glass "pulling in late" after landing on work/contact:
   the panels' glass strength is tied to the transition, and the fly-in starts with the transition.
   Verified with stepped 1/30 s frame captures (test/probe_glass.py) in Chromium and WebKit: after landing the glass metrics
   (backdrop luma / std inside .ct-col and the first work panel) stay constant within ~1-2 %, panel bbox settles within 4 frames.
+
+==================== v7.6 (trim bg intro) ====================
+Background video: bg5.mp4 / bg5-720.mp4 / poster5.jpg = bg4* with the first 21.76 s removed (cut on a scene change found
+  with ffmpeg scene detection, between the 20-25 s the owner asked for); audio trimmed in sync (AAC 128k). Re-encoded from the
+  already upscaled bg4 files with the same settings (2560x1440 25 fps, x264 High 2-pass 3.0 Mbps; 720p crf 24 / 1.5 Mbps), no
+  new processing. Focus map timestamps shifted by -21.76 s. Everything else as v7.5.

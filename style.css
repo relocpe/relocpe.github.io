@@ -25,8 +25,8 @@ html.glon #gl{opacity:1}
 html.static #gl{display:none}
 #bgb{display:none}
 /* poster: shown immediately (GL mode until the scene is ready; static + reduced motion always) */
-.poster{position:fixed;inset:0;z-index:0;background:var(--poster,url(poster4.jpg)) center/contain no-repeat;overflow:hidden;isolation:isolate;pointer-events:none;transition:opacity .9s var(--ease)}
-.poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster4.jpg)) center/cover;filter:blur(26px) brightness(.9)}
+.poster{position:fixed;inset:0;z-index:0;background:var(--poster,url(poster5.jpg)) center/contain no-repeat;overflow:hidden;isolation:isolate;pointer-events:none;transition:opacity .9s var(--ease)}
+.poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster5.jpg)) center/cover;filter:blur(26px) brightness(.9)}
 html.glon .poster{opacity:0}
 html.vcover .poster{background-size:cover}
 html.static:not(.rm) .poster{display:none}
