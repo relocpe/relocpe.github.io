@@ -14,7 +14,8 @@ window.SV_DISCORD_HANDLE = "relocpe";
 window.SV_VIDEOS = [
   // { src: "bg.mp4", poster: "poster.jpg" },   // SLAVE - LAST SUMMER (removed by user)
   // { src: "bg2.mp4", poster: "poster2.jpg" },   // removed by user
-  { src: "bg3.mp4", srcSmall: "bg3-720.mp4", poster: "poster3.jpg" },   // SLAVE - LA, 1080p master (phones get the 720p file)
+  // { src: "bg3.mp4", srcSmall: "bg3-720.mp4", poster: "poster3.jpg" },   // replaced in v7.5
+  { src: "bg4.mp4", srcSmall: "bg4-720.mp4", poster: "poster4.jpg" },   // v7.5: owner's new video, 1080p25 upscaled to 2560x1440 (phones get the 720p file)
 ];
 
 // Telegram: one account, several handles. PRIMARY gets the bright "write" button; the rest are shown as "aka" aliases.

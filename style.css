@@ -25,8 +25,8 @@ html.glon #gl{opacity:1}
 html.static #gl{display:none}
 #bgb{display:none}
 /* poster: shown immediately (GL mode until the scene is ready; static + reduced motion always) */
-.poster{position:fixed;inset:0;z-index:0;background:var(--poster,url(poster3.jpg)) center/contain no-repeat;overflow:hidden;isolation:isolate;pointer-events:none;transition:opacity .9s var(--ease)}
-.poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster3.jpg)) center/cover;filter:blur(26px) brightness(.9)}
+.poster{position:fixed;inset:0;z-index:0;background:var(--poster,url(poster4.jpg)) center/contain no-repeat;overflow:hidden;isolation:isolate;pointer-events:none;transition:opacity .9s var(--ease)}
+.poster::before{content:"";position:absolute;inset:-12%;z-index:-1;background:var(--poster,url(poster4.jpg)) center/cover;filter:blur(26px) brightness(.9)}
 html.glon .poster{opacity:0}
 html.vcover .poster{background-size:cover}
 html.static:not(.rm) .poster{display:none}
@@ -274,7 +274,7 @@ body.entered .cue{opacity:1}
 /* no text-shadows: legibility comes from local darkening behind the text (scrims) and glass panels */
 .chrome::before{height:132px;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.22) 55%,rgba(0,0,0,0))}
 html.gl .s-index::before,html.static .s-index::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(ellipse min(48vw,640px) min(28vh,250px) at 50% 52%,rgba(0,0,0,.5),rgba(0,0,0,.3) 55%,rgba(0,0,0,0) 100%)}
+  background:radial-gradient(ellipse min(48vw,640px) min(22vh,200px) at 50% 50%,rgba(0,0,0,.5),rgba(0,0,0,.3) 55%,rgba(0,0,0,0) 100%)}
 html.static .s-index{position:relative;isolation:isolate}
 .cue::before{inset:-18px -34px;background:radial-gradient(closest-side,rgba(0,0,0,.5),rgba(0,0,0,0))}
 /* nick readable from the first frame: above the boot log, scramble starts ~1.2s in */
@@ -282,9 +282,6 @@ html.static .s-index{position:relative;isolation:isolate}
 body:not(.entered) main{position:relative;z-index:2147483001!important}
 body:not(.entered) .s-index{z-index:2147483001}
 .s-index{flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,2.2vh,22px)}
-.sub{font-family:var(--mono);font-size:18px;font-weight:400;line-height:1.4;letter-spacing:.01em;color:rgba(242,242,242,.84);text-transform:lowercase;text-align:center;padding:0 var(--side);text-wrap:balance}
-.sub span{white-space:nowrap}
-@media (max-width:720px){.sub{font-size:17px}}
 /* the name is hit-testable (selectable, and the topmost thing at its own centre) */
 html.gl .s-index .name{pointer-events:auto}
 /* small text: 13px+ and higher contrast */

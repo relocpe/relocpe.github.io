@@ -141,3 +141,32 @@ v7.4 (2026-10-26): panels fly in from depth on work by default (and fly back out
   nick (18/17 px mono, lowercase). Small text >= 13 px with more contrast; all text-shadows removed in favour of local scrims.
   Contact rows in the same glass as the discord card. Work cards placed off the subject (two wide columns on desktop, lower stack on
   mobile). Nimbus keeps its placeholder preview (no real screenshot exists). Reduced motion unchanged (static).
+
+==================== v7.5 (new bg video, upscaled; volume 0.3) ====================
+Background video: bg4.mp4 / bg4-720.mp4 / poster4.jpg (replaces bg3*; bg3 entry commented out in config.js)
+  Source: video supplied by the site owner (1920x1080, 25 fps, AAC), full length 3:51.6, audio kept.
+  Upscale: ffmpeg hqdn3d (light denoise) -> lanczos 2560x1440 -> unsharp, libx264 High, 2-pass 3.0 Mbps,
+           AAC 128k, +faststart. bg4.mp4 = 2560x1440 25 fps, 90.7 MB.
+  Real-ESRGAN was NOT used: on this CPU-only box realesr-general-x4v3 measured 1.26 s/frame (360p->1440p),
+           3.02 s/frame (540p->2160p), 11.56 s/frame from 1080p -> ~18.6 h for the 5790 frames. 4K would not fit
+           the 95 MB per-file limit at acceptable quality either, so the target is 2K (1440p).
+  bg4-720.mp4 (mobile): 1280x720 25 fps, x264 High crf 24 / maxrate 1.5 Mbps, AAC 128k, 40.7 MB.
+  poster4.jpg: frame at 00:01, 1920 wide.
+  Focus map (src/focus.js): regenerated for bg4 with YuNet face detection (small/bottom-band/crowd faces ignored).
+Audio: default volume 0.3 (was 0.6); the unmute fade targets 0.3; volume is stored under the new key "sv.vol"
+       (the old "sv.volume" is removed once, so returning visitors also get 0.3).
+Removed: the subtitle line under the nick (index section) — HTML, CSS and tests; nothing replaces it.
+Fix — liquid glass "pulling in late" after landing on work/contact:
+  Cause: the engine faded each section with opacity (<1, e.g. 0.85-0.999 while S.p eased in) plus a blur filter during
+  the transition. An ancestor with opacity < 1 or a filter becomes a backdrop root, so the backdrop-filter of .ct-col /
+  .presence / the stack pill only saw the transparent section and showed the sharp video; the frost appeared only once
+  the section opacity read exactly 1, ~1-1.5 s after the transition had landed.
+  Fix: sections that contain glass are never faded/filtered themselves - the fade goes onto their glass elements and
+  glass-free sub-trees, the transition blur only onto the glass-free parts, the section keeps only the transform; and the
+  landed section reaches opacity 1 by the end of the transition (no longer waiting for the eased S.p).
+  Second cause (work panels): the camera / panel layout followed the damped S.p, which kept settling ~1.5 s after the
+  0.85 s transition (p 0.89 at the end of it), so the WebGL glass panels kept drifting and brightening into place
+  (panel glass luma 183 -> 128 over 1.6 s). Now S.p keeps the same early motion but lands exactly with the transition,
+  the panels' glass strength is tied to the transition, and the fly-in starts with the transition.
+  Verified with stepped 1/30 s frame captures (test/probe_glass.py) in Chromium and WebKit: after landing the glass metrics
+  (backdrop luma / std inside .ct-col and the first work panel) stay constant within ~1-2 %, panel bbox settles within 4 frames.
