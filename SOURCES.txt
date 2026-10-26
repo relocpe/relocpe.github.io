@@ -129,3 +129,7 @@ v7.1 (2026-10-26): contact card renders ALL Discord activities (custom status as
 v7.2 (2026-10-26): browser tab title is "<relocpe />" (static <title>&lt;relocpe /&gt;</title> for crawlers/no-JS) and scrambles like the nick
   (same ASCII glyph set !<>-_\/[]{}=+*^?#01x%&$, 38ms stagger, 260-520ms settle, every 2-3s, ~16 title updates/s only during the scramble,
   idle otherwise); stops and restores the exact title while the tab is hidden; static under prefers-reduced-motion. Nothing else changed.
+v7.3 (2026-10-26): section transition = camera push (replaces the v6.8 glitch: row tears + RGB split no longer fire on section change):
+  0.85 s bell; camera zoom up to 1.085 (eases back at 0.6), 14-tap radial zoom blur in the fx pass (luminance only, VHS chroma bleed muted
+  while blurring), outgoing HTML scales 1->1.07 + blur(<=5px), incoming 0.95->1 (slow-in / long-settle easing). Panel appear glitch kick off
+  (hover glitch kick unchanged). ?off=tr disables it; prefers-reduced-motion keeps the plain crossfade. Prototype flag ?tr removed. No new assets.
