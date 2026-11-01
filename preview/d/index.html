@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>relocpe</title>
+<meta name="description" content="relocpe: статус в Discord прямо сейчас, проекты Ya.Music-RPC и Nimbus, контакты.">
+<meta name="theme-color" content="#080808">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://samevamp-presence.samevamp.workers.dev" crossorigin>
+<link rel="preload" href="../shared/fonts/JetBrainsMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="d.css">
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<canvas class="field" id="field" aria-hidden="true"></canvas>
+
+<header class="top">
+  <a class="who" href="#now" aria-label="Discord-статус"><span class="dot" id="dot" data-s="unknown"></span><span id="stTxt">discord</span></a>
+  <svg class="string" id="string" aria-hidden="true" preserveAspectRatio="none"><path id="strPath" d=""/></svg>
+  <nav class="nav" aria-label="Разделы">
+    <a href="#now" data-sec="now" class="on"><span data-sc>статус</span></a>
+    <a href="#work" data-sec="work"><span data-sc>проекты</span></a>
+    <a href="#ping" data-sec="ping"><span data-sc>связь</span></a>
+  </nav>
+</header>
+
+<main>
+  <section class="sec sec-now" id="now" data-acc="status" aria-labelledby="nick">
+    <h1 class="nick" id="nick">&lt;relocpe /&gt;</h1>
+    <div class="pane" id="nowPane" aria-live="polite">
+      <p class="lbl"><span id="nowLbl">discord</span><span class="lbl-r" id="nowAgo"></span></p>
+      <div class="stage" id="stage"></div>
+      <ul class="also" id="also"></ul>
+    </div>
+  </section>
+
+  <section class="sec sec-work" id="work" data-acc="#9DABFF" aria-label="Проекты">
+    <div class="pane">
+      <p class="lbl">проекты<span class="lbl-r">github.com/relocpe</span></p>
+      <ul class="work">
+        <li>
+          <a class="pj" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-hint="открыть ↗" data-media="../shared/ya-music-rpc.jpg">
+            <span class="pj-n" data-sc>Ya.Music-RPC</span>
+            <span class="pj-m">Swift · MIT</span>
+            <span class="pj-t">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню. macOS, Apple Silicon.</span>
+          </a>
+          <img class="pj-img" src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" loading="lazy" decoding="async">
+        </li>
+        <li>
+          <a class="pj" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-hint="открыть ↗">
+            <span class="pj-n" data-sc>Nimbus</span>
+            <span class="pj-m">C, Swift · MIT</span>
+            <span class="pj-t">zapret для macOS с интерфейсом: Discord и YouTube без блокировок и без терминала. macOS 14+.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec sec-ping" id="ping" data-acc="#E7C07C" aria-label="Связь">
+    <div class="pane">
+      <p class="lbl">связь</p>
+      <dl class="ping">
+        <div><dt>telegram</dt><dd><a href="https://t.me/relocpe" target="_blank" rel="noopener" data-hint="написать ↗"><span data-sc>@relocpe</span></a><a href="https://t.me/portfade" target="_blank" rel="noopener" data-hint="канал ↗"><span data-sc>@portfade</span></a></dd></div>
+        <div><dt>discord</dt><dd><span class="mono-v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-hint="в буфер"><span class="cp-l">копировать</span></button></dd></div>
+        <div><dt>github</dt><dd><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="открыть ↗"><span data-sc>relocpe</span></a></dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<p class="key" id="key" aria-hidden="true"><span id="keyTxt">↓ листай</span></p>
+<div class="hint" id="hint" aria-hidden="true"><i></i><span id="hintTxt"></span></div>
+<div class="peek" id="peek" aria-hidden="true"><img alt="" src="../shared/ya-music-rpc.jpg" width="546" height="500" decoding="async"></div>
+
+<script type="module" src="d.js"></script>
+</body>
+</html>
