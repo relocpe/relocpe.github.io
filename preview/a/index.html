@@ -4,70 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>relocpe</title>
-<meta name="robots" content="noindex">
-<meta name="theme-color" content="#0d0c0c">
-<meta name="color-scheme" content="dark">
+<meta name="description" content="relocpe: Ya.Music-RPC и Nimbus для строки меню macOS, статус Discord и контакты.">
+<meta name="theme-color" content="#0A0A0B">
 <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="../shared/fonts/unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../shared/common.css">
+<link rel="preconnect" href="https://samevamp-presence.samevamp.workers.dev" crossorigin>
+<link rel="preload" href="../shared/fonts/JetBrainsMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../shared/base.css">
 <link rel="stylesheet" href="a.css">
-<script>document.documentElement.classList.add("js")</script>
-<script type="module" src="a.js"></script>
+<script>/* pick the mode before first paint: 3D only on wide screens with a fine pointer and motion allowed */
+(function(){var m=function(q){return matchMedia(q).matches},gl=false;try{var c=document.createElement("canvas");gl=!!(c.getContext("webgl2")||c.getContext("webgl"))}catch(e){}
+if(gl&&m("(min-width: 900px)")&&m("(pointer: fine)")&&!m("(prefers-reduced-motion: reduce)")&&!/[?&]flat\b/.test(location.search))document.documentElement.classList.add("gl");})();</script>
 </head>
 <body>
-<header class="bar">
-  <p class="bar-st" id="barSt"><span class="dot" id="barDot"></span><span id="barTxt">Discord</span></p>
-  <nav class="bar-nav" aria-label="Разделы">
-    <a href="#work">Проекты</a>
-    <a href="#contact">Контакты</a>
-    <a class="btn" href="https://t.me/relocpe" target="_blank" rel="noopener">Написать</a>
-  </nav>
-</header>
+<div class="space" id="space" aria-hidden="true"></div>
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="css3d" id="css3d"></div>
+  <header class="intro" id="intro">
+    <h1 class="nick" id="nick">&lt;relocpe /&gt;</h1>
+  </header>
+  <p class="hint mono" id="hint">листай вниз · в строке меню Ya.Music-RPC и Nimbus</p>
+</div>
 
-<main>
-  <section class="hero" aria-labelledby="name">
-    <div class="now" id="now" aria-live="polite">
-      <div class="now-av" data-in><img id="av" src="../shared/discord-avatar.png" alt="Аватар relocpe в Discord" width="128" height="128"></div>
-      <div class="now-txt">
-        <h2 class="now-h" data-in style="--i:1"><span class="sr">Discord: </span><span id="stTxt">Discord</span></h2>
-        <p class="now-custom" id="custom" data-in style="--i:2" hidden></p>
-        <ul class="acts" id="acts"></ul>
-      </div>
+<main class="screen" id="screen">
+  <div class="wall" aria-hidden="true"></div>
+  <header class="mbar">
+    <nav class="mb-l" aria-label="Разделы">
+      <span class="mb-b">relocpe</span>
+      <a class="mb-i" href="#cards" data-go="1">Проекты</a>
+      <a class="mb-i" href="#w-contacts" data-go="0.3">Связь</a>
+    </nav>
+    <div class="mb-r">
+      <a class="ico" id="icoNimbus" href="#card-nimbus" data-go="1" aria-label="Nimbus">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.6 15.2h8.6a3.4 3.4 0 0 0 .4-6.8 4.6 4.6 0 0 0-8.8 1.1A2.9 2.9 0 0 0 5.6 15.2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="ico" id="icoYa" href="#card-ya" data-go="1" aria-label="Ya.Music-RPC">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 14.6V5.2l7-1.6v9.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.2" cy="14.6" r="1.9" fill="currentColor"/><circle cx="13.2" cy="13" r="1.9" fill="currentColor"/></svg>
+      </a>
+      <span class="mb-st"><span class="dot" id="mbDot" data-s="unknown"></span></span>
+      <time class="mb-t mono" id="clock"></time>
     </div>
-    <h1 class="name" id="name" aria-label="relocpe"><span class="nm" aria-hidden="true"><span>r</span><span>e</span><span>l</span><span>o</span><span>c</span><span>p</span><span>e</span></span></h1>
+  </header>
+
+  <section class="win w-discord" id="w-discord" aria-labelledby="dc-h">
+    <div class="tb"><i></i><i></i><i></i><h2 id="dc-h">Discord</h2></div>
+    <div class="wb" id="dcBody" aria-live="polite"></div>
   </section>
 
-  <section class="work" id="work" aria-labelledby="work-h">
-    <h2 class="sec-h" id="work-h" data-in>Проекты</h2>
-    <article class="pj pj-shot">
-      <div class="pj-txt">
-        <h3 class="pj-t" data-in>Ya.Music-RPC</h3>
-        <p class="pj-d" data-in style="--i:1">Показывает текущий трек Яндекс Музыки в статусе Discord и добавляет мини-плеер в строку меню macOS. Для Mac на Apple Silicon.</p>
-        <p class="pj-m" data-in style="--i:2"><span>Swift, Shell</span><span>MIT</span><span>обновлён 23 октября 2026</span></p>
-        <a class="pj-a" data-in style="--i:3" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener">Открыть на GitHub</a>
-      </div>
-      <figure class="pj-fig" data-in style="--i:2"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню: трек upside down, kurtains" width="546" height="500" loading="lazy" decoding="async"></figure>
-    </article>
-    <article class="pj pj-plain">
-      <h3 class="pj-t" data-in>Nimbus</h3>
-      <div class="pj-txt">
-        <p class="pj-d" data-in style="--i:1">Оболочка для zapret в строке меню macOS: обходит блокировки Discord и YouTube без терминала. Подбор стратегий и редактируемые списки доменов, macOS 14+.</p>
-        <p class="pj-m" data-in style="--i:2"><span>C, Swift</span><span>MIT</span><span>форк</span><span>обновлён 23 октября 2026</span></p>
-        <a class="pj-a" data-in style="--i:3" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener">Открыть на GitHub</a>
-      </div>
-    </article>
-  </section>
-
-  <section class="contact" id="contact" aria-labelledby="contact-h">
-    <h2 class="sec-h" id="contact-h" data-in>Контакты</h2>
-    <ul class="ct">
-      <li class="ct-row" data-in><span class="ct-k">Telegram</span><a class="ct-v" href="https://t.me/relocpe" target="_blank" rel="noopener">@relocpe</a><span class="ct-n">ещё <a href="https://t.me/portfade" target="_blank" rel="noopener">@portfade</a></span></li>
-      <li class="ct-row" data-in style="--i:1"><span class="ct-k">Discord</span><button class="ct-v" type="button" data-copy="relocpe" aria-label="Скопировать ник relocpe">relocpe</button><span class="ct-n">нажми, чтобы скопировать</span></li>
-      <li class="ct-row" data-in style="--i:2"><span class="ct-k">GitHub</span><a class="ct-v" href="https://github.com/relocpe" target="_blank" rel="noopener">relocpe</a><span class="ct-n"></span></li>
+  <section class="win w-contacts" id="w-contacts" aria-labelledby="ct-h">
+    <div class="tb"><i></i><i></i><i></i><h2 id="ct-h">Связь</h2></div>
+    <ul class="wb ct">
+      <li><span class="ct-n">Telegram</span><span class="ct-v"><a href="https://t.me/relocpe" target="_blank" rel="noopener">@relocpe</a><a class="alt" href="https://t.me/portfade" target="_blank" rel="noopener">@portfade</a></span></li>
+      <li><span class="ct-n">Discord</span><span class="ct-v"><span>relocpe</span><button type="button" class="cp" data-copy="relocpe" aria-label="Скопировать ник relocpe"><span class="cp-l">копировать</span></button></span></li>
+      <li><span class="ct-n">GitHub</span><span class="ct-v"><a href="https://github.com/relocpe" target="_blank" rel="noopener">relocpe</a></span></li>
     </ul>
   </section>
+
+  <div class="cards" id="cards" aria-label="Проекты" role="region">
+    <article class="card" id="card-ya" data-from="icoYa">
+      <figure class="cd-f"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" decoding="async"></figure>
+      <h3>Ya.Music-RPC</h3>
+      <p>Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню. Для Mac на Apple Silicon.</p>
+      <a class="cd-a" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener"><span>Swift · MIT</span><span>GitHub ↗</span></a>
+    </article>
+    <article class="card" id="card-nimbus" data-from="icoNimbus">
+      <h3>Nimbus</h3>
+      <p>Оболочка для zapret в строке меню: Discord и YouTube без блокировок и без терминала. macOS 14+.</p>
+      <a class="cd-a" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener"><span>C, Swift · MIT</span><span>GitHub ↗</span></a>
+    </article>
+  </div>
 </main>
-<footer class="foot"><span>relocpe, 2026</span><a href="#name">Наверх</a></footer>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="boot.js"></script>
 </body>
 </html>
