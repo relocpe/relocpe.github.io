@@ -15,69 +15,68 @@
 </head>
 <body>
 <canvas class="bg" id="bg" aria-hidden="true"></canvas>
-<div class="grain" aria-hidden="true"></div>
 
 <header class="top">
-  <a class="who" href="#ping" aria-label="Discord-статус"><span class="dot" id="dot" data-s="unknown"></span><span id="stTxt">discord</span></a>
+  <a class="who" href="#ping" data-cl="связь"><span class="dot" id="dot" data-s="unknown"></span><span id="stTxt">discord</span></a>
   <svg class="string" id="string" aria-hidden="true" preserveAspectRatio="none"><path id="strPath" d=""/></svg>
   <nav class="nav" aria-label="Разделы">
-    <a href="#work" data-sec="work" class="on"><span data-sc>проекты</span></a>
-    <a href="#ping" data-sec="ping"><span data-sc>связь</span></a>
+    <a href="#work" data-sec="work">проекты</a>
+    <a href="#ping" data-sec="ping">связь</a>
   </nav>
+  <p class="count" aria-hidden="true"><span class="roll"><span id="cnt">01<br>02<br>03</span></span> / 03</p>
 </header>
 
 <main>
-  <section class="sec sec-work" id="work" data-acc="#A3B0FF" aria-labelledby="nick">
-    <h1 class="nick" id="nick">&lt;relocpe /&gt;</h1>
-    <div class="repos-h"><p class="lbl">репозитории<span class="lbl-r"><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="профиль ↗">github.com/relocpe</a></span></p></div>
-    <ul class="repos">
+  <section class="sec sec-hero" id="hero" aria-label="relocpe">
+    <h1 class="nick" id="nick" aria-label="&lt;relocpe /&gt;"><span id="nickT" aria-hidden="true">&lt;relocpe /&gt;</span></h1>
+  </section>
+
+  <section class="sec sec-work" id="work" aria-labelledby="workH">
+    <div class="sec-h"><h2 class="lbl ln" id="workH"><span>02 · репозитории</span></h2><a class="lbl ln" href="https://github.com/relocpe" target="_blank" rel="noopener" data-cl="профиль"><span>github.com/relocpe ↗</span></a></div>
+    <ul class="rows">
 <!--repos-->
-<li class="rc has-shot">
- <a class="rc-a" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-hint="github ↗">
-  <div class="rc-media"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" loading="eager" decoding="async"></div>
-  <div class="rc-body">
-   <p class="rc-k"><span>01</span><span class="rc-own">relocpe /</span></p>
-   <h3 class="rc-n"><span data-sc>Ya.Music-RPC</span><span class="rc-arr" aria-hidden="true">↗</span></h3>
-   <p class="rc-d">Discord RPC for Yandex Music</p>
-   <p class="rc-ru">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню.</p>
-   
-   <ul class="rc-top"><li>#discord-rich-presence</li><li>#macos</li><li>#swift</li><li>#yandex-music</li></ul>
-   <div class="rc-bar" aria-hidden="true"><i style="flex:95.5;background:#F05138" title="Swift 95.5%"></i><i style="flex:4.5;background:#89E051" title="Shell 4.5%"></i></div>
-   <ul class="rc-meta"><li><i class="ld" style="background:#F05138"></i>Swift</li><li title="звёзды"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11l-3.9 2.2.9-4.3L1.8 6l4.3-.5z"/></svg>0</li><li title="форки"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4c0 1.4 1 2.2 2.4 2.2h3.2C11 8.2 12 7.4 12 6V4.6M8 8.2v3.2"/></svg>0</li><li>MIT</li><li><time datetime="2026-10-26T12:09:14Z" data-pushed>26 окт 2026</time></li></ul>
-  </div>
+<li class="row">
+ <a class="row-a" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-cl="открыть" data-media="0" aria-describedby="rd1">
+  <span class="r-no">01</span>
+  <span class="r-name ln"><span>Ya.Music-RPC</span></span>
+  <span class="r-meta">Swift<br><span>2026</span></span>
  </a>
+ <div class="r-sub" id="rd1">
+  <p class="r-d">Discord RPC for Yandex Music<span class="r-ru">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню.</span><span class="r-fk"></span></p>
+  <p class="r-st"><span>★ 0</span><span>MIT</span><time datetime="2026-10-26T12:09:14Z" data-pushed>26 окт 2026</time><a href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" class="r-gh" data-cl="github">github ↗</a></p>
+ </div>
+ <div class="r-x"><div class="r-xi"><div class="media" data-m="0"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" loading="lazy" decoding="async"></div></div></div>
 </li>
-<li class="rc">
- <a class="rc-a" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-hint="github ↗">
-  <div class="rc-media rc-langs" aria-label="Языки репозитория"><ul><li><span class="lg-n">C</span><span class="lg-b" style="--p:87.6%;--c:#555555"></span><span class="lg-p">87.6%</span></li><li><span class="lg-n">Swift</span><span class="lg-b" style="--p:9.0%;--c:#F05138"></span><span class="lg-p">9%</span></li><li><span class="lg-n">Shell</span><span class="lg-b" style="--p:3.3%;--c:#89E051"></span><span class="lg-p">3.3%</span></li><li><span class="lg-n">Makefile</span><span class="lg-b" style="--p:0.1%;--c:#427819"></span><span class="lg-p">0.1%</span></li></ul></div>
-  <div class="rc-body">
-   <p class="rc-k"><span>02</span><span class="rc-own">relocpe /</span></p>
-   <h3 class="rc-n"><span data-sc>Nimbus</span><span class="rc-arr" aria-hidden="true">↗</span></h3>
-   <p class="rc-d">zapret for macOS with a GUI</p>
-   <p class="rc-ru">zapret с интерфейсом: Discord и YouTube без блокировок и без терминала.</p>
-   <p class="rc-fork">форк Flowseal/zapret-mac-discord-youtube</p>
-   <ul class="rc-top"><li>#discord</li><li>#macos</li><li>#youtube</li><li>#zapret</li></ul>
-   <div class="rc-bar" aria-hidden="true"><i style="flex:87.6;background:#555555" title="C 87.6%"></i><i style="flex:9.0;background:#F05138" title="Swift 9%"></i><i style="flex:3.3;background:#89E051" title="Shell 3.3%"></i><i style="flex:0.1;background:#427819" title="Makefile 0.1%"></i></div>
-   <ul class="rc-meta"><li><i class="ld" style="background:#555555"></i>C</li><li title="звёзды"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11l-3.9 2.2.9-4.3L1.8 6l4.3-.5z"/></svg>0</li><li title="форки"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4c0 1.4 1 2.2 2.4 2.2h3.2C11 8.2 12 7.4 12 6V4.6M8 8.2v3.2"/></svg>0</li><li>MIT</li><li><time datetime="2026-10-26T08:03:29Z" data-pushed>26 окт 2026</time></li></ul>
-  </div>
+<li class="row">
+ <a class="row-a" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-cl="открыть" data-media="1" aria-describedby="rd2">
+  <span class="r-no">02</span>
+  <span class="r-name ln"><span>Nimbus</span></span>
+  <span class="r-meta">C · Swift<br><span>2026</span></span>
  </a>
+ <div class="r-sub" id="rd2">
+  <p class="r-d">zapret for macOS with a GUI<span class="r-ru">zapret с интерфейсом: Discord и YouTube без блокировок и без терминала.</span><span class="r-fk">форк Flowseal/zapret-mac-discord-youtube</span></p>
+  <p class="r-st"><span>★ 0</span><span>MIT</span><time datetime="2026-10-26T08:03:29Z" data-pushed>26 окт 2026</time><a href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" class="r-gh" data-cl="github">github ↗</a></p>
+ </div>
+ <div class="r-x"><div class="r-xi"><div class="media" data-m="1"><canvas class="dith" data-dith="Nimbus" data-l1="C · Swift" data-l2="★ 0 · forks 0 · MIT · 2026" data-l3="zapret for macOS with a GUI" width="720" height="450" aria-label="Nimbus: zapret for macOS with a GUI" role="img"></canvas></div></div></div>
 </li>
 <!--/repos-->
     </ul>
   </section>
 
-  <section class="sec sec-ping" id="ping" data-acc="#E7C07C" aria-label="Связь">
-    <div class="ping-wrap">
-      <div class="pane">
-        <p class="lbl">связь</p>
-        <dl class="ping">
-          <div><dt>telegram</dt><dd><a href="https://t.me/relocpe" target="_blank" rel="noopener" data-hint="написать ↗"><span data-sc>@relocpe</span></a><a href="https://t.me/portfade" target="_blank" rel="noopener" data-hint="канал ↗"><span data-sc>@portfade</span></a></dd></div>
-          <div><dt>discord</dt><dd><span class="mono-v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-hint="в буфер"><span class="cp-l">копировать</span></button></dd></div>
-          <div><dt>github</dt><dd><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="открыть ↗"><span data-sc>relocpe</span></a></dd></div>
-        </dl>
+  <section class="sec sec-ping" id="ping" aria-labelledby="pingH">
+    <div class="sec-h"><h2 class="lbl ln" id="pingH"><span>03 · связь</span></h2></div>
+    <div class="ping">
+      <div class="contacts">
+        <p class="big ln"><a href="https://t.me/relocpe" target="_blank" rel="noopener" data-cl="написать"><span>@relocpe</span></a></p>
+        <p class="lbl ln tg"><span>telegram — пишите сюда</span></p>
+        <ul class="small">
+          <li class="ln"><span><b>канал</b><a href="https://t.me/portfade" target="_blank" rel="noopener" data-cl="открыть">@portfade</a></span></li>
+          <li class="ln"><span><b>discord</b><span class="v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-cl="копировать"><span class="cp-l">копировать</span></button></span></li>
+          <li class="ln"><span><b>github</b><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-cl="открыть">relocpe</a></span></li>
+        </ul>
       </div>
-      <div class="pane pane-now" id="nowPane" aria-live="polite">
-        <p class="lbl"><span id="nowLbl">discord</span><span class="lbl-r" id="nowAgo"></span></p>
+      <div class="now" id="nowPane" aria-live="polite">
+        <p class="lbl ln"><span><span id="nowLbl">discord</span><span class="lbl-r" id="nowAgo"></span></span></p>
         <div class="stage" id="stage"></div>
         <ul class="also" id="also"></ul>
       </div>
@@ -85,8 +84,9 @@
   </section>
 </main>
 
-<p class="key" id="key" aria-hidden="true"><span id="keyTxt">пробел: связь</span></p>
-<div class="hint" id="hint" aria-hidden="true"><i></i><span id="hintTxt"></span></div>
+<p class="key" aria-hidden="true"><span id="keyTxt">пробел — дальше</span></p>
+<div class="peek" id="peek" aria-hidden="true"><div class="peek-i" id="peekI"></div></div>
+<div class="cur" id="cur" aria-hidden="true"><span class="cur-d"></span><span class="cur-t" id="curT"></span></div>
 <script type="module" src="d.js"></script>
 </body>
 </html>
