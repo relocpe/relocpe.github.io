@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>relocpe</title>
-<meta name="description" content="relocpe: статус в Discord прямо сейчас, проекты Ya.Music-RPC и Nimbus, контакты.">
+<meta name="description" content="relocpe: Ya.Music-RPC и Nimbus для macOS, контакты и статус в Discord.">
 <meta name="theme-color" content="#080808">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
@@ -14,67 +14,79 @@
 <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
-<canvas class="field" id="field" aria-hidden="true"></canvas>
+<canvas class="bg" id="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
 
 <header class="top">
-  <a class="who" href="#now" aria-label="Discord-статус"><span class="dot" id="dot" data-s="unknown"></span><span id="stTxt">discord</span></a>
+  <a class="who" href="#ping" aria-label="Discord-статус"><span class="dot" id="dot" data-s="unknown"></span><span id="stTxt">discord</span></a>
   <svg class="string" id="string" aria-hidden="true" preserveAspectRatio="none"><path id="strPath" d=""/></svg>
   <nav class="nav" aria-label="Разделы">
-    <a href="#now" data-sec="now" class="on"><span data-sc>статус</span></a>
-    <a href="#work" data-sec="work"><span data-sc>проекты</span></a>
+    <a href="#work" data-sec="work" class="on"><span data-sc>проекты</span></a>
     <a href="#ping" data-sec="ping"><span data-sc>связь</span></a>
   </nav>
 </header>
 
 <main>
-  <section class="sec sec-now" id="now" data-acc="status" aria-labelledby="nick">
+  <section class="sec sec-work" id="work" data-acc="#A3B0FF" aria-labelledby="nick">
     <h1 class="nick" id="nick">&lt;relocpe /&gt;</h1>
-    <div class="pane" id="nowPane" aria-live="polite">
-      <p class="lbl"><span id="nowLbl">discord</span><span class="lbl-r" id="nowAgo"></span></p>
-      <div class="stage" id="stage"></div>
-      <ul class="also" id="also"></ul>
-    </div>
-  </section>
-
-  <section class="sec sec-work" id="work" data-acc="#9DABFF" aria-label="Проекты">
-    <div class="pane">
-      <p class="lbl">проекты<span class="lbl-r">github.com/relocpe</span></p>
-      <ul class="work">
-        <li>
-          <a class="pj" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-hint="открыть ↗" data-media="../shared/ya-music-rpc.jpg">
-            <span class="pj-n" data-sc>Ya.Music-RPC</span>
-            <span class="pj-m">Swift · MIT</span>
-            <span class="pj-t">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню. macOS, Apple Silicon.</span>
-          </a>
-          <img class="pj-img" src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" loading="lazy" decoding="async">
-        </li>
-        <li>
-          <a class="pj" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-hint="открыть ↗">
-            <span class="pj-n" data-sc>Nimbus</span>
-            <span class="pj-m">C, Swift · MIT</span>
-            <span class="pj-t">zapret для macOS с интерфейсом: Discord и YouTube без блокировок и без терминала. macOS 14+.</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+    <div class="repos-h"><p class="lbl">репозитории<span class="lbl-r"><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="профиль ↗">github.com/relocpe</a></span></p></div>
+    <ul class="repos">
+<!--repos-->
+<li class="rc has-shot">
+ <a class="rc-a" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-hint="github ↗">
+  <div class="rc-media"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" width="546" height="500" loading="eager" decoding="async"></div>
+  <div class="rc-body">
+   <p class="rc-k"><span>01</span><span class="rc-own">relocpe /</span></p>
+   <h3 class="rc-n"><span data-sc>Ya.Music-RPC</span><span class="rc-arr" aria-hidden="true">↗</span></h3>
+   <p class="rc-d">Discord RPC for Yandex Music</p>
+   <p class="rc-ru">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню.</p>
+   
+   <ul class="rc-top"><li>#discord-rich-presence</li><li>#macos</li><li>#swift</li><li>#yandex-music</li></ul>
+   <div class="rc-bar" aria-hidden="true"><i style="flex:95.5;background:#F05138" title="Swift 95.5%"></i><i style="flex:4.5;background:#89E051" title="Shell 4.5%"></i></div>
+   <ul class="rc-meta"><li><i class="ld" style="background:#F05138"></i>Swift</li><li title="звёзды"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11l-3.9 2.2.9-4.3L1.8 6l4.3-.5z"/></svg>0</li><li title="форки"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4c0 1.4 1 2.2 2.4 2.2h3.2C11 8.2 12 7.4 12 6V4.6M8 8.2v3.2"/></svg>0</li><li>MIT</li><li><time datetime="2026-10-26T12:09:14Z" data-pushed>26 окт 2026</time></li></ul>
+  </div>
+ </a>
+</li>
+<li class="rc">
+ <a class="rc-a" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-hint="github ↗">
+  <div class="rc-media rc-langs" aria-label="Языки репозитория"><ul><li><span class="lg-n">C</span><span class="lg-b" style="--p:87.6%;--c:#555555"></span><span class="lg-p">87.6%</span></li><li><span class="lg-n">Swift</span><span class="lg-b" style="--p:9.0%;--c:#F05138"></span><span class="lg-p">9%</span></li><li><span class="lg-n">Shell</span><span class="lg-b" style="--p:3.3%;--c:#89E051"></span><span class="lg-p">3.3%</span></li><li><span class="lg-n">Makefile</span><span class="lg-b" style="--p:0.1%;--c:#427819"></span><span class="lg-p">0.1%</span></li></ul></div>
+  <div class="rc-body">
+   <p class="rc-k"><span>02</span><span class="rc-own">relocpe /</span></p>
+   <h3 class="rc-n"><span data-sc>Nimbus</span><span class="rc-arr" aria-hidden="true">↗</span></h3>
+   <p class="rc-d">zapret for macOS with a GUI</p>
+   <p class="rc-ru">zapret с интерфейсом: Discord и YouTube без блокировок и без терминала.</p>
+   <p class="rc-fork">форк Flowseal/zapret-mac-discord-youtube</p>
+   <ul class="rc-top"><li>#discord</li><li>#macos</li><li>#youtube</li><li>#zapret</li></ul>
+   <div class="rc-bar" aria-hidden="true"><i style="flex:87.6;background:#555555" title="C 87.6%"></i><i style="flex:9.0;background:#F05138" title="Swift 9%"></i><i style="flex:3.3;background:#89E051" title="Shell 3.3%"></i><i style="flex:0.1;background:#427819" title="Makefile 0.1%"></i></div>
+   <ul class="rc-meta"><li><i class="ld" style="background:#555555"></i>C</li><li title="звёзды"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11l-3.9 2.2.9-4.3L1.8 6l4.3-.5z"/></svg>0</li><li title="форки"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4c0 1.4 1 2.2 2.4 2.2h3.2C11 8.2 12 7.4 12 6V4.6M8 8.2v3.2"/></svg>0</li><li>MIT</li><li><time datetime="2026-10-26T08:03:29Z" data-pushed>26 окт 2026</time></li></ul>
+  </div>
+ </a>
+</li>
+<!--/repos-->
+    </ul>
   </section>
 
   <section class="sec sec-ping" id="ping" data-acc="#E7C07C" aria-label="Связь">
-    <div class="pane">
-      <p class="lbl">связь</p>
-      <dl class="ping">
-        <div><dt>telegram</dt><dd><a href="https://t.me/relocpe" target="_blank" rel="noopener" data-hint="написать ↗"><span data-sc>@relocpe</span></a><a href="https://t.me/portfade" target="_blank" rel="noopener" data-hint="канал ↗"><span data-sc>@portfade</span></a></dd></div>
-        <div><dt>discord</dt><dd><span class="mono-v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-hint="в буфер"><span class="cp-l">копировать</span></button></dd></div>
-        <div><dt>github</dt><dd><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="открыть ↗"><span data-sc>relocpe</span></a></dd></div>
-      </dl>
+    <div class="ping-wrap">
+      <div class="pane">
+        <p class="lbl">связь</p>
+        <dl class="ping">
+          <div><dt>telegram</dt><dd><a href="https://t.me/relocpe" target="_blank" rel="noopener" data-hint="написать ↗"><span data-sc>@relocpe</span></a><a href="https://t.me/portfade" target="_blank" rel="noopener" data-hint="канал ↗"><span data-sc>@portfade</span></a></dd></div>
+          <div><dt>discord</dt><dd><span class="mono-v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-hint="в буфер"><span class="cp-l">копировать</span></button></dd></div>
+          <div><dt>github</dt><dd><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-hint="открыть ↗"><span data-sc>relocpe</span></a></dd></div>
+        </dl>
+      </div>
+      <div class="pane pane-now" id="nowPane" aria-live="polite">
+        <p class="lbl"><span id="nowLbl">discord</span><span class="lbl-r" id="nowAgo"></span></p>
+        <div class="stage" id="stage"></div>
+        <ul class="also" id="also"></ul>
+      </div>
     </div>
   </section>
 </main>
 
-<p class="key" id="key" aria-hidden="true"><span id="keyTxt">↓ листай</span></p>
+<p class="key" id="key" aria-hidden="true"><span id="keyTxt">пробел: связь</span></p>
 <div class="hint" id="hint" aria-hidden="true"><i></i><span id="hintTxt"></span></div>
-<div class="peek" id="peek" aria-hidden="true"><img alt="" src="../shared/ya-music-rpc.jpg" width="546" height="500" decoding="async"></div>
-
 <script type="module" src="d.js"></script>
 </body>
 </html>

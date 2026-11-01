@@ -8,8 +8,8 @@ const root = document.documentElement;
 /* ---------- accent per section (home follows the cover colour) ---------- */
 const hex = (s) => { const n = parseInt(s.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
 const HOME0 = "#D8D2C4";
-let homeAcc = HOME0, curSec = "now";
-const accFor = (sec) => sec === "now" ? homeAcc : document.getElementById(sec).dataset.acc;
+let homeAcc = HOME0, curSec = "work";
+const accFor = (sec) => document.getElementById(sec).dataset.acc;
 function setAcc() { const a = accFor(curSec); root.style.setProperty("--acc", a); field.target(hex(a)); }
 function liftColour([r, g, b]) {           // keep hue, force a readable light tint on #080808
   r /= 255; g /= 255; b /= 255;
@@ -21,107 +21,86 @@ function liftColour([r, g, b]) {           // keep hue, force a readable light t
   return "#" + [R, G, B].map((v) => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("");
 }
 
-/* ---------- glyph field: dim grid, typing heads with fading trails, a lamp under the cursor ---------- */
-const NOISE = "абвгдежзийклмнопрстуфхцчшщъыьэюяё.,:;'";
+/* ---------- background: domain-warped ink, ordered-dithered, lit by the cursor (WebGL) ---------- */
 const field = (() => {
-  const cv = $("field"), g = cv.getContext("2d"), st = document.createElement("canvas"), sg = st.getContext("2d");
-  let W = 0, H = 0, dpr = 1, cw = 11, chh = 18, cols = 0, rows = 0, ch = null, base = null, br = null, fieldH = 0;
-  const extra = new Map();
-  let writers = [], words = ["relocpe"], acc = [216, 210, 196], tgt = acc.slice(), raf = 0, last = 0, t0 = 0;
-  const mouse = { x: -999, y: -999, sx: -999, sy: -999, on: false };
-  const rnd = (a, b) => a + Math.random() * (b - a);
-  const FONT = () => `${cw >= 11 ? 12 : 11}px "JetBrains Mono", ui-monospace, monospace`;
+  const cv = $("bg"); let gl = null;
+  try { gl = cv.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power", preserveDrawingBuffer: false }); } catch {}
+  let acc = [216, 210, 196], tgt = acc.slice(), raf = 0, last = 0, T = Math.random() * 100, scale = .5;
+  const m = { x: innerWidth * .72, y: innerHeight * .3, sx: innerWidth * .72, sy: innerHeight * .3, on: 0, l: 0, user: false };
+  if (!gl) return { start() {}, target(c) {}, words() {} };
+  const VS = "attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}";
+  const HP = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+  const FS = `precision ${HP && HP.precision > 0 ? "highp" : "mediump"} float;
+uniform vec2 R;uniform float T;uniform vec2 M;uniform float L;uniform vec3 A;uniform float S;
+float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fb(vec2 p){float v=0.,a=.5;mat2 r=mat2(.8,.6,-.6,.8);for(int i=0;i<4;i++){v+=a*n(p);p=r*p*2.03;a*=.5;}return v;}
+float b2(vec2 a){a=floor(a);return fract(dot(a,vec2(.5,a.y*.75)));}
+float b4(vec2 a){return b2(.5*a)*.25+b2(a);}
+float b8(vec2 a){return b4(.5*a)*.25+b2(a);}
+void main(){
+ vec2 fc=gl_FragCoord.xy;vec2 uv=fc/R.y;uv.y+=S;float t=T*.035;
+ vec2 q=vec2(fb(uv*1.4+vec2(0.,t)),fb(uv*1.4+vec2(5.2,1.3)-t));
+ vec2 r=vec2(fb(uv*1.4+2.6*q+vec2(1.7,9.2)+t*1.4),fb(uv*1.4+2.6*q+vec2(8.3,2.8)-t*.9));
+ float v=fb(uv*1.4+2.8*r);
+ float ink=smoothstep(.42,.92,v);
+ vec2 d=(fc-M)/R.y;float li=exp(-dot(d,d)*9.)*L;
+ float vig=smoothstep(1.25,.2,length((fc/R-vec2(.5,.45))*vec2(1.,.8)));
+ float lum=min(.58,(ink*.6+li*.4+ink*li*.5)*(.55+.45*vig));
+ float dt=step(b8(fc)+.02,lum);
+ vec3 bg=vec3(.031);
+ vec3 tint=mix(vec3(.22,.22,.21),A*.62,.35+.65*clamp(li*1.6+ink*.4,0.,1.));
+ vec3 col=bg+bg*ink*.9+dt*tint*(.45+.75*lum);
+ gl_FragColor=vec4(col,1.);
+}`;
+  const sh = (t, src) => { const s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+  if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { gl = null; return { start() {}, target() {}, words() {} }; }
+  gl.useProgram(pr);
+  const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const U = {}; ["R", "T", "M", "L", "A", "S"].forEach((k) => (U[k] = gl.getUniformLocation(pr, k)));
+  let W = 0, H = 0;
   function size() {
-    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
-    cw = W < 720 ? 10 : 11; chh = W < 720 ? 17 : 18;
-    cols = Math.ceil(W / cw); rows = Math.ceil(H / chh) + 1; fieldH = rows * chh;
-    cv.width = W * dpr; cv.height = H * dpr;
-    extra.clear(); const n = cols * rows; ch = new Uint8Array(n); base = new Float32Array(n); br = new Float32Array(n);
-    for (let i = 0; i < n; i++) { ch[i] = (Math.random() * NOISE.length) | 0; base[i] = Math.random() < .42 ? 0 : rnd(.03, .08); }
-    st.width = W * dpr; st.height = fieldH * dpr; sg.setTransform(dpr, 0, 0, dpr, 0, 0);
-    sg.clearRect(0, 0, W, fieldH); sg.font = FONT(); sg.textBaseline = "middle"; sg.fillStyle = "#F2F1EE";
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) { const i = r * cols + c; if (base[i]) { sg.globalAlpha = base[i]; sg.fillText(NOISE[ch[i]], c * cw, r * chh + chh / 2); } }
-    sg.globalAlpha = 1;
-    writers = []; const nW = Math.max(4, Math.round((cols * rows) / 1400));
-    for (let k = 0; k < nW; k++) writers.push(spawn(true));
+    scale = .5; W = Math.max(1, Math.round(innerWidth * scale)); H = Math.max(1, Math.round(innerHeight * scale));
+    cv.width = W; cv.height = H; gl.viewport(0, 0, W, H);
   }
-  function spawn(first) {
-    const msg = Math.random() < .3 ? words[(Math.random() * words.length) | 0] : "";
-    const len = msg ? msg.length + 6 : (rnd(8, 46) | 0), c0 = (rnd(-10, cols - 4) | 0);
-    return { r: (Math.random() * rows) | 0, c: first ? c0 + rnd(0, 20) : c0, c0, end: c0 + len, v: rnd(14, 34), msg, delay: first ? rnd(0, 1.2) : rnd(.1, 1.6), last: -1 };
+  function draw() {
+    gl.uniform2f(U.R, W, H); gl.uniform1f(U.T, T); gl.uniform2f(U.M, m.sx * scale, (innerHeight - m.sy) * scale);
+    gl.uniform1f(U.L, m.l); gl.uniform3f(U.A, acc[0] / 255, acc[1] / 255, acc[2] / 255); gl.uniform1f(U.S, REDUCE ? 0 : scrollY / innerHeight * .35);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
-  const offset = () => (REDUCE ? 0 : (scrollY * .22) % fieldH);
+  let acc30 = 0;
   function frame(t) {
-    raf = 0; const dt = Math.min(.05, last ? (t - last) / 1000 : .016); last = t;
-    for (let k = 0; k < 3; k++) acc[k] += (tgt[k] - acc[k]) * (1 - Math.exp(-dt * 4));
-    const decay = Math.exp(-dt / 1.1);
-    for (let i = 0; i < br.length; i++) if (br[i] > .003) br[i] *= decay; else br[i] = 0;
-    const heads = [];
-    for (let k = 0; k < writers.length; k++) {
-      const w = writers[k];
-      if (w.delay > 0) { w.delay -= dt; continue; }
-      w.c += w.v * dt; const c = Math.floor(w.c);
-      if (c > w.last) {
-        for (let cc = Math.max(w.last + 1, 0); cc <= Math.min(c, cols - 1); cc++) {
-          const i = w.r * cols + cc, mi = cc - w.c0 - 3;
-          if (w.msg && mi >= 0 && mi < w.msg.length) { const ix = NOISE.indexOf(w.msg[mi]); ch[i] = ix >= 0 ? ix : 255; if (ix < 0) extra.set(i, w.msg[mi]); }
-          else ch[i] = (Math.random() * NOISE.length) | 0;
-          br[i] = 1;
-        }
-        w.last = c;
-      }
-      if (c >= w.end || c >= cols) { writers[k] = spawn(false); continue; }
-      if (c >= 0) heads.push([w.r, c, w]);
+    raf = 0; const dt = Math.min(.05, last ? (t - last) / 1000 : .016); last = t; acc30 += dt;
+    if (acc30 >= 1 / 32) {           // ~30 fps is plenty for slow ink
+      const st = acc30; acc30 = 0; T += st;
+      for (let k = 0; k < 3; k++) acc[k] += (tgt[k] - acc[k]) * (1 - Math.exp(-st * 3));
+      if (!m.user) { m.x = innerWidth * (.55 + .3 * Math.sin(T * .13)); m.y = innerHeight * (.4 + .25 * Math.sin(T * .09 + 1)); }
+      m.sx += (m.x - m.sx) * (1 - Math.exp(-st * (m.user ? 6 : 1))); m.sy += (m.y - m.sy) * (1 - Math.exp(-st * (m.user ? 6 : 1)));
+      m.l += ((m.user ? 1 : .55) - m.l) * (1 - Math.exp(-st * 2));
+      draw();
     }
-    if (mouse.on) { mouse.sx += (mouse.x - mouse.sx) * (1 - Math.exp(-dt * 10)); mouse.sy += (mouse.y - mouse.sy) * (1 - Math.exp(-dt * 10)); }
-    draw(heads);
     if (!document.hidden) raf = requestAnimationFrame(frame);
   }
-  function draw(heads) {
-    const off = offset();
-    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height);
-    g.globalAlpha = 1;
-    g.drawImage(st, 0, -off * dpr); if (fieldH - off < H) g.drawImage(st, 0, (fieldH - off) * dpr);
-    if (REDUCE) return;
-    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.font = FONT(); g.textBaseline = "middle";
-    const col = `rgb(${acc.map(Math.round).join(",")})`; g.fillStyle = col;
-    const yOf = (r) => { let y = r * chh - off; if (y < -chh) y += fieldH; return y + chh / 2; };
-    for (let i = 0; i < br.length; i++) {
-      const b = br[i]; if (b < .02) continue;
-      const r = (i / cols) | 0, c = i - r * cols; const y = yOf(r); if (y < -chh || y > H + chh) continue;
-      g.globalAlpha = Math.min(1, b * .65); g.fillText(ch[i] === 255 ? extra.get(i) || "·" : NOISE[ch[i]], c * cw, y);
-    }
-    if (mouse.on && FINE) {             // lamp: glyphs light up around the cursor
-      const R = 120, my = mouse.sy + off, r0 = Math.max(0, Math.floor((my - R) / chh)), r1 = Math.min(rows - 1, Math.ceil((my + R) / chh));
-      const c0 = Math.max(0, Math.floor((mouse.sx - R) / cw)), c1 = Math.min(cols - 1, Math.ceil((mouse.sx + R) / cw));
-      for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) {
-        const i = r * cols + c; if (!base[i] && !br[i]) continue;
-        const dx = c * cw + cw / 2 - mouse.sx, dy = r * chh + chh / 2 - my, d = Math.sqrt(dx * dx + dy * dy); if (d > R) continue;
-        const a = Math.pow(1 - d / R, 2) * .55; if (a < .03) continue;
-        g.globalAlpha = a; g.fillText(ch[i] === 255 ? extra.get(i) || "·" : NOISE[ch[i]], c * cw, yOf(r));
-      }
-    }
-    g.fillStyle = "#F2F1EE";
-    for (const [r, c] of heads) { const i = r * cols + c; const y = yOf(r); g.globalAlpha = 1; g.fillText(ch[i] === 255 ? extra.get(i) || "·" : NOISE[ch[i]], c * cw, y); }
-    g.globalAlpha = 1;
-  }
-  function kick() { if (!raf && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } }
+  const kick = () => { if (!raf && !document.hidden && !REDUCE) { last = 0; raf = requestAnimationFrame(frame); } };
   return {
-    async start() {
-      try { await Promise.race([document.fonts.load('12px "JetBrains Mono"'), new Promise((r) => setTimeout(r, 1500))]); } catch {}
-      size(); draw([]);
-      cv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1200, easing: "ease-out" });
-      let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { if (Math.abs(innerWidth - W) > 1 || Math.abs(innerHeight - H) > 120) { size(); } draw([]); kick(); }, 150); });
-      if (REDUCE) { addEventListener("scroll", () => draw([]), { passive: true }); return; }
+    start() {
+      size(); m.l = .55; draw();
+      cv.animate([{ opacity: 0 }, { opacity: 1 }], { duration: REDUCE ? 1 : 1400, easing: "ease-out" });
+      let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { size(); draw(); }, 120); });
+      cv.addEventListener("webglcontextlost", (e) => { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; });
+      if (REDUCE) { addEventListener("resize", () => draw()); return; }
       document.addEventListener("visibilitychange", kick);
       if (FINE) {
-        addEventListener("pointermove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; if (!mouse.on) { mouse.on = true; mouse.sx = e.clientX; mouse.sy = e.clientY; } }, { passive: true });
-        document.addEventListener("pointerleave", () => { mouse.on = false; });
-      }
+        addEventListener("pointermove", (e) => { m.x = e.clientX; m.y = e.clientY; m.user = true; }, { passive: true });
+        document.documentElement.addEventListener("pointerleave", () => { m.user = false; });
+      } else addEventListener("pointerdown", (e) => { m.x = e.clientX; m.y = e.clientY; m.user = true; setTimeout(() => (m.user = false), 2500); }, { passive: true });
       kick();
     },
-    target(c) { tgt = c; },
-    words(list) { words = list.filter(Boolean).map((s) => s.toLowerCase().slice(0, 60)); },
+    target(c) { tgt = c; if (REDUCE) { acc = c.slice(); draw(); } },
+    words() {},
   };
 })();
 
@@ -153,7 +132,7 @@ const field = (() => {
 })();
 
 /* ---------- hover scramble on links (same glyph widths, mono) ---------- */
-const SC = "абвгдежзиклмнопрстуфхцчшэюя./:;_";
+const SC = "!<>-_/[]{}=+*^?#%";
 function scrambleText(el) {
   if (REDUCE || el._run) return;
   const txt = el.dataset.txt || (el.dataset.txt = el.textContent); el._run = true; el.setAttribute("aria-label", txt);
@@ -187,17 +166,17 @@ function follower(el, dx, dy, k = .2, damp = .62) {
   };
 }
 if (FINE) {
-  const hint = follower($("hint"), 16, 14, .3, .55), peek = follower($("peek"), 28, -130, .14, .7), ht = $("hintTxt");
-  addEventListener("pointermove", (e) => { hint.move(e); peek.move(e); }, { passive: true });
+  const hint = follower($("hint"), 16, 14, .3, .55), ht = $("hintTxt");
+  addEventListener("pointermove", (e) => { hint.move(e); }, { passive: true });
   document.querySelectorAll("[data-hint]").forEach((a) => {
-    a.addEventListener("pointerenter", () => { ht.textContent = a.dataset.hint; hint.show(true); if (a.dataset.media) peek.show(true); });
-    a.addEventListener("pointerleave", () => { hint.show(false); peek.show(false); });
+    a.addEventListener("pointerenter", () => { ht.textContent = a.dataset.hint; hint.show(true); });
+    a.addEventListener("pointerleave", () => { hint.show(false); });
   });
 }
 
 /* ---------- sections: reveal, nav state, accent, space key ---------- */
 const secs = [...document.querySelectorAll(".sec")], navs = [...document.querySelectorAll(".nav a")];
-const KEY = { now: "пробел: проекты", work: "пробел: связь", ping: "пробел: наверх" };
+const KEY = { work: "пробел: связь", ping: "пробел: наверх" };
 const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); }), { threshold: .2 });
 secs.forEach((s) => io.observe(s));
 function pickSection() {
@@ -207,7 +186,7 @@ function pickSection() {
   if (best.id !== curSec) { curSec = best.id; navs.forEach((a) => a.classList.toggle("on", a.dataset.sec === curSec)); setAcc(); window.pluck && window.pluck(3); $("keyTxt").textContent = KEY[curSec]; }
 }
 let sq = 0; addEventListener("scroll", () => { if (!sq) sq = requestAnimationFrame(() => { sq = 0; pickSection(); }); }, { passive: true });
-$("keyTxt").textContent = KEY.now;
+$("keyTxt").textContent = KEY.work;
 addEventListener("keydown", (e) => {
   if (e.code !== "Space" || e.target.closest("a,button,input,textarea,select,[contenteditable]")) return;
   e.preventDefault(); const i = secs.findIndex((s) => s.id === curSec); const nx = secs[(i + 1) % secs.length];
@@ -228,7 +207,7 @@ function cover(srcs, alt) {
 }
 function idleCover() {
   const c = h("div", "cov idle"); let s = "";
-  for (let r = 0; r < 6; r++) { for (let k = 0; k < 8; k++) s += Math.random() < .35 ? " " : NOISE[(Math.random() * 33) | 0]; s += r < 5 ? "\n" : ""; }
+  for (let r = 0; r < 6; r++) { for (let k = 0; k < 8; k++) s += Math.random() < .5 ? " " : "·•"[(Math.random() * 2) | 0]; s += r < 5 ? "\n" : ""; }
   c.textContent = s; c.setAttribute("aria-hidden", "true"); return c;
 }
 function progress(a) {
@@ -311,10 +290,11 @@ async function tint(srcs) {
   const u = srcs && srcs.length ? await firstImage(srcs.filter((s) => s.includes("workers.dev"))) : "";
   const c = u ? await dominant(u) : null;
   if (my !== tintTok) return;
-  homeAcc = c ? liftColour(c) : HOME0; if (curSec === "now") setAcc();
+  homeAcc = c ? liftColour(c) : HOME0; $("nowPane").style.setProperty("--acc", homeAcc);
 }
 
 scramble($("nick"), { hover: true });
+document.querySelectorAll("[data-pushed]").forEach((t) => { const d = (Date.now() - Date.parse(t.dateTime)) / 864e5; if (d >= 0 && d < 60) t.textContent = d < 1 ? "обновлён сегодня" : d < 2 ? "обновлён вчера" : `обновлён ${Math.floor(d)} дн. назад`; t.title = t.dateTime.slice(0, 10); });
 copyButtons();
 startTicker(document);
 setAcc();
