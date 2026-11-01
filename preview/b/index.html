@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>relocpe</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ececee">
+<link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../shared/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../shared/common.css">
+<link rel="stylesheet" href="b.css">
+<script>document.documentElement.classList.add("js")</script>
+<script type="module" src="b.js"></script>
+</head>
+<body>
+<header class="mb" data-ui>
+  <div class="mb-l">
+    <img class="mb-av" id="mbAv" src="../shared/discord-avatar.png" alt="" width="20" height="20">
+    <button class="mb-i mb-app" type="button" aria-expanded="true" aria-controls="m-ct" data-menu="m-ct">relocpe</button>
+    <a class="mb-i" href="#work">Проекты</a>
+    <a class="mb-i mb-hide" href="https://github.com/relocpe" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <div class="mb-r">
+    <button class="mb-i mb-dc" type="button" aria-expanded="true" aria-controls="m-dc" data-menu="m-dc"><span class="dot" id="mbDot"></span><span id="mbSt">Discord</span></button>
+    <time class="mb-i mb-clock" id="clock"></time>
+  </div>
+</header>
+
+<main>
+  <section class="desk" aria-labelledby="name">
+    <h1 class="name" id="name" data-in>relocpe</h1>
+
+    <div class="menu m-ct" id="m-ct" data-ui data-in style="--i:1">
+      <h2 class="sr">Контакты</h2>
+      <a class="mi" href="https://t.me/relocpe" target="_blank" rel="noopener"><span>Написать в Telegram</span><kbd>@relocpe</kbd></a>
+      <a class="mi" href="https://t.me/portfade" target="_blank" rel="noopener"><span>Второй Telegram</span><kbd>@portfade</kbd></a>
+      <div class="sep" role="separator"></div>
+      <button class="mi" type="button" data-copy="relocpe"><span>Скопировать ник в Discord</span><kbd>relocpe</kbd></button>
+      <div class="sep" role="separator"></div>
+      <a class="mi" href="https://github.com/relocpe" target="_blank" rel="noopener"><span>Открыть GitHub</span><kbd>relocpe</kbd></a>
+    </div>
+
+    <div class="menu m-dc" id="m-dc" data-ui data-in style="--i:2" aria-live="polite">
+      <h2 class="sr">Статус в Discord</h2>
+      <div class="dc-head">
+        <img class="dc-av" id="dcAv" src="../shared/discord-avatar.png" alt="Аватар в Discord" width="56" height="56">
+        <div><p class="dc-n" id="dcName">relocpe</p><p class="dc-s"><span class="dot" id="dcDot"></span><span id="dcSt">загружаю статус</span></p></div>
+      </div>
+      <p class="dc-custom" id="dcCustom" hidden></p>
+      <div id="dcActs"></div>
+    </div>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="work-h">
+    <h2 class="work-h" id="work-h" data-in>Проекты</h2>
+    <p class="work-p" data-in style="--i:1">Обе программы живут в строке меню macOS и лежат на GitHub с открытым кодом.</p>
+    <article class="pj">
+      <figure class="pj-fig" data-in><img src="../shared/ya-music-rpc.jpg" alt="Меню Ya.Music-RPC: мини-плеер с треком upside down, kurtains" width="546" height="500" loading="lazy" decoding="async"></figure>
+      <div class="pj-txt">
+        <h3 data-in>Ya.Music-RPC</h3>
+        <p data-in style="--i:1">Показывает текущий трек Яндекс Музыки в статусе Discord и добавляет мини-плеер в строку меню. Для Mac на Apple Silicon.</p>
+        <dl data-in style="--i:2"><dt>Язык</dt><dd>Swift, Shell</dd><dt>Лицензия</dt><dd>MIT</dd><dt>Обновлён</dt><dd>23 октября 2026</dd></dl>
+        <a class="go" data-in style="--i:3" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener">Ya.Music-RPC на GitHub</a>
+      </div>
+    </article>
+    <article class="pj pj-r">
+      <div class="pj-txt">
+        <h3 data-in>Nimbus</h3>
+        <p data-in style="--i:1">Оболочка для zapret в строке меню: обходит блокировки Discord и YouTube без терминала. Подбор стратегий и редактируемые списки доменов, macOS 14+.</p>
+        <dl data-in style="--i:2"><dt>Язык</dt><dd>C, Swift</dd><dt>Лицензия</dt><dd>MIT, форк</dd><dt>Обновлён</dt><dd>23 октября 2026</dd></dl>
+        <a class="go" data-in style="--i:3" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener">Nimbus на GitHub</a>
+      </div>
+    </article>
+  </section>
+</main>
+<footer class="foot"><p class="foot-n">relocpe</p><p class="foot-l"><a href="https://t.me/relocpe" target="_blank" rel="noopener">Telegram</a><a href="https://github.com/relocpe" target="_blank" rel="noopener">GitHub</a><button type="button" data-copy="relocpe">Discord: relocpe</button></p></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

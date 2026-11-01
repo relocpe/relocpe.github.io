@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>relocpe</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0d0c0c">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../shared/fonts/unbounded-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../shared/common.css">
+<link rel="stylesheet" href="a.css">
+<script>document.documentElement.classList.add("js")</script>
+<script type="module" src="a.js"></script>
+</head>
+<body>
+<header class="bar">
+  <p class="bar-st" id="barSt"><span class="dot" id="barDot"></span><span id="barTxt">Discord</span></p>
+  <nav class="bar-nav" aria-label="Разделы">
+    <a href="#work">Проекты</a>
+    <a href="#contact">Контакты</a>
+    <a class="btn" href="https://t.me/relocpe" target="_blank" rel="noopener">Написать</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="name">
+    <div class="now" id="now" aria-live="polite">
+      <div class="now-av" data-in><img id="av" src="../shared/discord-avatar.png" alt="Аватар relocpe в Discord" width="128" height="128"></div>
+      <div class="now-txt">
+        <h2 class="now-h" data-in style="--i:1"><span class="sr">Discord: </span><span id="stTxt">Discord</span></h2>
+        <p class="now-custom" id="custom" data-in style="--i:2" hidden></p>
+        <ul class="acts" id="acts"></ul>
+      </div>
+    </div>
+    <h1 class="name" id="name" aria-label="relocpe"><span class="nm" aria-hidden="true"><span>r</span><span>e</span><span>l</span><span>o</span><span>c</span><span>p</span><span>e</span></span></h1>
+  </section>
+
+  <section class="work" id="work" aria-labelledby="work-h">
+    <h2 class="sec-h" id="work-h" data-in>Проекты</h2>
+    <article class="pj pj-shot">
+      <div class="pj-txt">
+        <h3 class="pj-t" data-in>Ya.Music-RPC</h3>
+        <p class="pj-d" data-in style="--i:1">Показывает текущий трек Яндекс Музыки в статусе Discord и добавляет мини-плеер в строку меню macOS. Для Mac на Apple Silicon.</p>
+        <p class="pj-m" data-in style="--i:2"><span>Swift, Shell</span><span>MIT</span><span>обновлён 23 октября 2026</span></p>
+        <a class="pj-a" data-in style="--i:3" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener">Открыть на GitHub</a>
+      </div>
+      <figure class="pj-fig" data-in style="--i:2"><img src="../shared/ya-music-rpc.jpg" alt="Мини-плеер Ya.Music-RPC в строке меню: трек upside down, kurtains" width="546" height="500" loading="lazy" decoding="async"></figure>
+    </article>
+    <article class="pj pj-plain">
+      <h3 class="pj-t" data-in>Nimbus</h3>
+      <div class="pj-txt">
+        <p class="pj-d" data-in style="--i:1">Оболочка для zapret в строке меню macOS: обходит блокировки Discord и YouTube без терминала. Подбор стратегий и редактируемые списки доменов, macOS 14+.</p>
+        <p class="pj-m" data-in style="--i:2"><span>C, Swift</span><span>MIT</span><span>форк</span><span>обновлён 23 октября 2026</span></p>
+        <a class="pj-a" data-in style="--i:3" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener">Открыть на GitHub</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <h2 class="sec-h" id="contact-h" data-in>Контакты</h2>
+    <ul class="ct">
+      <li class="ct-row" data-in><span class="ct-k">Telegram</span><a class="ct-v" href="https://t.me/relocpe" target="_blank" rel="noopener">@relocpe</a><span class="ct-n">ещё <a href="https://t.me/portfade" target="_blank" rel="noopener">@portfade</a></span></li>
+      <li class="ct-row" data-in style="--i:1"><span class="ct-k">Discord</span><button class="ct-v" type="button" data-copy="relocpe" aria-label="Скопировать ник relocpe">relocpe</button><span class="ct-n">нажми, чтобы скопировать</span></li>
+      <li class="ct-row" data-in style="--i:2"><span class="ct-k">GitHub</span><a class="ct-v" href="https://github.com/relocpe" target="_blank" rel="noopener">relocpe</a><span class="ct-n"></span></li>
+    </ul>
+  </section>
+</main>
+<footer class="foot"><span>relocpe, 2026</span><a href="#name">Наверх</a></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
