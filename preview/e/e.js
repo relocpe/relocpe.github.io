@@ -1,158 +1,175 @@
-import { lastSeen, copyText } from "./core.js";
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, pinned, through, spaceNav, cursor, copies, reveal, chars, pushedDates, presenceCard, grain } from "./core.js";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, lastSeen, coverImg, tickTimes, startTicker, h, ago } from "./core.js";
 
-const v = bgVideo($("v"));
-const snd = sound(v, $("snd"), { label: $("sndL") });
-grain(document.querySelector(".grain"), { size: 180 });
+const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
+sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });
+const tile = (() => { try { const n = 180, c = document.createElement("canvas"); c.width = c.height = n; const g = c.getContext("2d"), d = g.createImageData(n, n); for (let i = 0; i < d.data.length; i += 4) { const x = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = x; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); return `url(${c.toDataURL()})`; } catch { return ""; } })();
+document.querySelector(".grain").style.backgroundImage = tile;
 
-// Tor-style bootstrap log, ~1.7 s, any key or click skips
-const nick = $("nickT"); chars(nick); nick.removeAttribute("aria-label");
-const typeNick = () => { const cs = [...nick.children]; if (RM) { cs.forEach((c) => c.classList.add("on")); return; } cs.forEach((c, i) => setTimeout(() => c.classList.add("on"), 60 + i * 55)); };
+// ---- Nimbus visual: the real strategy list from macos/Payload/strategies.tsv, set as type
+const STRAT = ["general", "general (ALT)", "general (ALT2)", "general (ALT3)", "general (ALT4)", "general (ALT5)", "general (ALT6)", "general (ALT7)", "general (ALT8)", "general (ALT9)", "general (ALT10)", "general (ALT11)", "general (ALT12)", "general (EXP)", "general (FAKE TLS AUTO)", "general (FAKE TLS AUTO ALT)", "general (FAKE TLS AUTO ALT2)", "general (FAKE TLS AUTO ALT3)", "general (SIMPLE FAKE)", "general (SIMPLE FAKE ALT)", "general (SIMPLE FAKE ALT2)"];
+document.querySelectorAll("[data-nimbus]").forEach((a) => {
+  const nb = h("div", "nb"), hd = h("div", "nb-h"), ul = h("ul", "nb-l");
+  hd.append(h("b", "", "zapret · стратегии"), h("span", "", `${STRAT.length}`));
+  STRAT.forEach((s, i) => { const li = h("li", i === 1 ? "on" : "", s); ul.appendChild(li); });
+  nb.append(hd, ul, h("p", "nb-f", "./macos/build.sh"));
+  const g = h("i", "nb-g"); a.append(nb, g);
+});
+document.querySelectorAll(".mf-g,.nb-g").forEach((g) => { g.style.backgroundImage = tile; });
+
+// ---- line masks: every [data-ln] rises out of its own mask, staggered 70 ms inside its [data-lg] group
+document.querySelectorAll("[data-lg]").forEach((g) => {
+  const ls = g.matches("[data-ln]") ? [g] : [...g.querySelectorAll("[data-ln]")];
+  ls.forEach((el, i) => { const w = document.createElement(el.tagName === "LI" || !/^(H\d|P|A|SPAN)$/.test(el.parentNode.tagName) ? "div" : "span"); w.className = "ln"; if (el.tagName === "LI") { const inner = h("div", "ln-i"); inner.style.setProperty("--d", i); while (el.firstChild) inner.appendChild(el.firstChild); w.appendChild(inner); el.appendChild(w); } else { el.parentNode.insertBefore(w, el); w.appendChild(el); el.classList.add("ln-i"); el.style.setProperty("--d", i); if (getComputedStyle(el).display === "inline") el.style.display = "block"; } });
+});
+const groups = [...document.querySelectorAll("[data-lg]")];
+if (RM || !("IntersectionObserver" in window)) groups.forEach((g) => g.classList.add("in"));
+else { const io = new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { rootMargin: "0px 0px -10% 0px" }); groups.forEach((g) => io.observe(g)); }
+
+// ---- boot log, typed: 18-24 ms per char, 120 ms between lines, ~1.9 s; any key or click skips
+const nickT = $("nickT"), caret = $("caret"), nickEl = $("nick"); chars(nickT); nickT.removeAttribute("aria-label");
+let typing = [];
+function typeNick() {
+  typing.forEach(clearTimeout); typing = []; caret.classList.remove("dim");
+  const cs = [...nickT.children];
+  if (RM) { cs.forEach((c) => c.classList.add("on")); return; }
+  cs.forEach((c) => c.classList.remove("on"));
+  cs.forEach((c, i) => typing.push(setTimeout(() => c.classList.add("on"), 80 + i * 45)));
+  typing.push(setTimeout(() => caret.classList.add("dim"), 80 + cs.length * 45 + 3000));
+}
 function boot() {
   const box = $("boot"), log = $("bootLog");
-  if (RM || new URLSearchParams(location.search).has("noboot")) { box.classList.add("done"); typeNick(); return; }
-  const t = new Date(), mo = t.toLocaleString("en", { month: "short" }), d = String(t.getDate()).padStart(2, "0");
-  const ts = () => { const n = new Date(); return `${mo} ${d} ${n.toTimeString().slice(0, 8)}.${String(n.getMilliseconds()).padStart(3, "0")}`; };
-  const L = [
-    ["0", "starting", "Starting"], ["5", "conn", "Connecting to a relay"], ["10", "conn_done", "Connected to a relay"],
-    ["14", "handshake", "Handshaking with a relay"], ["15", "handshake_done", "Handshake with a relay done"],
-    ["75", "enough_dirinfo", "Loaded enough directory info to build circuits"], ["90", "ap_handshake_done", "Handshake finished with a relay to build circuits"],
-    ["95", "circuit_create", "Establishing a Tor circuit"], ["100", "done", "Done"],
-  ];
-  let i = 0, end = false, tm;
-  const fin = () => { if (end) return; end = true; clearTimeout(tm); box.classList.add("done"); setTimeout(typeNick, 380); setTimeout(whoIntro, 420); removeEventListener("keydown", fin); removeEventListener("pointerdown", fin); };
-  const step = () => {
-    if (i >= L.length) { tm = setTimeout(fin, 320); return; }
-    const [p, k, s] = L[i++], line = document.createElement("div");
-    line.innerHTML = `${ts()} [notice] <b>Bootstrapped ${p}%</b> (${k}): ${s}${p === "100" ? ' <span class="ok">ok</span>' : ""}`;
-    log.appendChild(line); tm = setTimeout(step, i < 3 ? 140 : 90 + Math.random() * 140);
+  if (RM || new URLSearchParams(location.search).has("noboot")) { box.classList.add("done"); box.style.display = "none"; typeNick(); return; }
+  const L = ["bootstrapped 14%  handshake", "bootstrapped 75%  directory info", "bootstrapped 100% done"];
+  let end = false, tm = [];
+  const fin = () => {
+    if (end) return; end = true; tm.forEach(clearTimeout); removeEventListener("keydown", fin); removeEventListener("pointerdown", fin);
+    [...log.children].forEach((d, i) => d.style.setProperty("--i", i)); box.classList.add("out");
+    setTimeout(() => { box.classList.add("done"); typeNick(); }, 380); setTimeout(() => { box.style.display = "none"; }, 1000);
   };
+  let t = 0;
+  L.forEach((s, li) => {
+    const row = document.createElement("div"); const at = t;
+    tm.push(setTimeout(() => log.appendChild(row), at));
+    [...s].forEach((c, ci) => { t += 18 + Math.random() * 6; tm.push(setTimeout(() => { row.textContent = s.slice(0, ci + 1); }, t)); });
+    if (li === L.length - 1) tm.push(setTimeout(() => { const ok = h("span", "ok", "  [ ok ]"); row.appendChild(ok); }, t + 40));
+    t += 120;
+  });
+  tm.push(setTimeout(fin, t + 260));
   addEventListener("keydown", fin); addEventListener("pointerdown", fin);
-  step();
 }
 boot();
 
-// scroll-driven video: camera push in the hero, closes to a slit, reopens as a box beside the contacts
-const hero = $("top"), ping = $("ping"), nickEl = $("nick"), shot = $("shot"), shotI = shot && shot.querySelector(".shot-i");
-let last = "";
-const names = [...document.querySelectorAll(".repo-name")];
-function frame() {
-  const hp = pinned(hero), mob = innerWidth <= 820;
-  const r = ping.getBoundingClientRect(), q = clamp(1 - r.top / innerHeight);
-  let clip, sc, br;
-  if (q <= 0) {
-    const c = ease.io(clamp((hp - 0.2) / 0.7)) * 50;
-    sc = 1 + 0.32 * ease.out(hp); clip = `inset(${c}% 0% ${c}% 0%)`; br = 0.5 - 0.15 * hp;
-  } else {
-    const k = ease.out(q), tgt = mob ? [6, 0, 66, 0] : [16, 6, 16, 52], from = mob ? [39, 0, 39, 0] : [50, 6, 50, 52];
-    clip = `inset(${tgt.map((t, i) => lerp(from[i], t, k).toFixed(2) + "%").join(" ")})`; sc = 1.25 - 0.1 * k; br = 0.42;
+// ---- header: hide on scroll down, show on scroll up; active section dot; progress line
+const hud = $("hud"), progB = $("progB"), navs = [...document.querySelectorAll(".hud-nav a")];
+let lastY = 0, acc = 0;
+function hudTick(y) {
+  const d = y - lastY; lastY = y;
+  if (y < 80) { hud.classList.remove("hide"); acc = 0; return; }
+  acc = Math.sign(d) === Math.sign(acc) ? acc + d : d;
+  if (acc > 24) hud.classList.add("hide"); else if (acc < -24) hud.classList.remove("hide");
+}
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver((es) => es.forEach((x) => { const a = navs.find((n) => n.dataset.sec === x.target.id); if (a) a.classList.toggle("on", x.isIntersecting); }), { rootMargin: "-45% 0px -45% 0px" });
+  ["work", "ping"].forEach((id) => io.observe($(id)));
+}
+hud.addEventListener("focusin", () => hud.classList.remove("hide"));
+
+// ---- scroll scene: hero exit, sticky repo stage, the bridge slit, the 4:5 window in contacts
+const hero = $("top"), bridge = $("bridge"), ping = $("ping"), win = $("win"), stage = document.querySelector(".stage"), caps = [...document.querySelectorAll(".stage-c span")];
+const pjs = [...document.querySelectorAll(".pj")];
+let lastClip = "", lastSh = -1, lastNk = "", cur = 0;
+// window tween: 0 = slit, 1 = 4:5 frame; time-based 900 ms io easing
+let wt = 0, wdir = 0, wPrev = 0;
+const ioE = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+function frame(now) {
+  const W = innerWidth, H = innerHeight, mob = W <= 820, y = S.lenis ? S.lenis.scroll : scrollY;
+  hudTick(y);
+  const max = document.documentElement.scrollHeight - H; progB.style.transform = `scaleY(${clamp(y / Math.max(1, max)).toFixed(4)})`;
+  // hero exit
+  const hp = pinned(hero), k = RM ? 0 : ease.out(clamp(hp / 0.85));
+  const nk = `translateY(-100%) translate3d(0,${(-k * 30).toFixed(2)}vh,0) scale(${(1 - 0.08 * k).toFixed(4)})|${(1 - clamp((hp - 0.55) / 0.35)).toFixed(3)}`;
+  if (nk !== lastNk) { lastNk = nk; const [tr, op] = nk.split("|"); nickEl.style.transform = tr; nickEl.style.opacity = op; }
+  let sh = 0.45 + 0.4 * k, clip = "inset(0px 0px 0px 0px)";
+  v.style.transform = RM ? "" : `scale(${(1 + 0.05 * k).toFixed(4)})`;
+  // bridge: full screen -> 2px slit
+  const br = bridge.getBoundingClientRect();
+  if (br.top < H) {
+    const bp = clamp(-br.top / Math.max(1, br.height - H)), e = ease.io(bp);
+    sh = lerp(0.85, 0.35, ease.out(clamp((H - br.top) / H)));
+    const half = lerp(0, H / 2 - 1, e); clip = `inset(${half.toFixed(1)}px 0px ${half.toFixed(1)}px 0px)`;
+    // contacts window
+    const pr = ping.getBoundingClientRect(), want = pr.top < H * 0.72 ? 1 : 0;
+    const dt = Math.min(64, now - (wPrev || now)); wPrev = now;
+    if (RM) wt = want; else if (want > wt) wt = Math.min(1, wt + dt / 900); else if (want < wt) wt = Math.max(0, wt - dt / 900);
+    if (wt > 0 && bp >= 1) {
+      const r = win.getBoundingClientRect(), q = ioE(wt);
+      const slit = [H / 2 - 1, 0, H / 2 - 1, 0], tgt = [r.top, W - r.right, H - r.bottom, r.left];
+      const ins = slit.map((s, i) => lerp(s, tgt[i], q).toFixed(1) + "px");
+      clip = `inset(${ins.join(" ")} round ${(4 * q).toFixed(1)}px)`; sh = lerp(0.35, 0.2, q);
+    }
+  } else { wPrev = now; wt = 0; }
+  if (clip !== lastClip) { lastClip = clip; vbox.style.clipPath = clip; vbox.style.webkitClipPath = clip; }
+  if (Math.abs(sh - lastSh) > 0.002) { lastSh = sh; shade.style.opacity = sh.toFixed(3); }
+  // repo stage: swap when the second project's text crosses the middle
+  if (!mob && pjs[1]) {
+    const n = pjs[1].getBoundingClientRect().top < H * 0.5 ? 1 : 0;
+    if (n !== cur) { caps[cur].classList.remove("on"); caps[cur].classList.toggle("up", n > cur); cur = n; caps[n].classList.remove("up"); caps[n].classList.add("on"); stage.classList.toggle("s1", n === 1); }
   }
-  if (RM) { sc = 1; }
-  const s = `${clip}|${sc.toFixed(4)}|${br.toFixed(3)}`;
-  if (s !== last) { last = s; v.style.clipPath = clip; v.style.webkitClipPath = clip; v.style.transform = `scale(${sc})`; v.style.filter = `grayscale(1) contrast(1.22) brightness(${br})`; }
-  if (!RM) {
-    const k = ease.out(clamp(hp / 0.6));
-    nickEl.style.transform = `translate3d(0,${-k * 22}vh,0)`; nickEl.style.letterSpacing = `${-0.045 + k * 0.14}em`; nickEl.style.opacity = String(1 - clamp((hp - 0.35) / 0.4));
-    if (shotI) { const t = through(shot); shot.style.setProperty("--c", (100 - ease.out(clamp(t * 2.4)) * 100).toFixed(2) + "%"); shot.style.setProperty("--z", ease.out(clamp(t * 1.6)).toFixed(3)); shot.style.setProperty("--py", ((0.5 - t) * 60).toFixed(1)); }
-    names.forEach((n) => { const t = through(n); n.style.transform = `translate3d(${((0.5 - t) * 10).toFixed(2)}vw,0,0) skewX(${clamp(-S.v * 0.25, -8, 8).toFixed(2)}deg)`; });
-  } else if (shotI) shot.style.setProperty("--c", "0%");
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 
-document.querySelectorAll(".tw").forEach((a) => chars(a));
-document.querySelectorAll(".tw").forEach((a) => a.removeAttribute("aria-label"));
-reveal();
-pushedDates();
+// ---- cursor: ring over media
+cursor($("cur"), $("curT"), { k: 0.28 });
+document.addEventListener("pointerover", (e) => { const c = $("cur"); if (c) c.classList.toggle("ring", !!(e.target.closest && e.target.closest("[data-ring]"))); });
+
 copies();
-cursor($("cur"), $("curT"), { k: COARSE ? 1 : 0.32 });
-smooth(0.09);
-spaceNav([hero, $("work"), ping]);
+pushedDates();
+smooth(0.08);
+$("toTop").addEventListener("click", () => { setTimeout(typeNick, RM ? 0 : 900); });
 
-// ---- discord block, top left: avatar + nick + status word, revealed like a process in the boot log
-const who = $("who"), whoI = $("whoI"), whoC = $("whoC"), whoS = $("whoS"), whoN = $("whoN"), whoA = $("whoA"), whoAt = $("whoAt");
-const WK = "relocpe:who", WORD = { online: "online", idle: "idle", dnd: "не беспокоить", offline: "offline" };
-const shortAgo = (t) => { const m = Math.max(0, (Date.now() - t) / 6e4); return m < 2 ? "только что" : m < 60 ? `${Math.round(m)}м назад` : m < 1440 ? `${Math.round(m / 60)}ч назад` : `${Math.round(m / 1440)}д назад`; };
-let wState = null, wIntro = !RM && !new URLSearchParams(location.search).has("noboot"), wPhase = wIntro ? 0 : 9, avReady = false;
-try { if (sessionStorage.getItem("relocpe.who")) { wIntro = false; wPhase = 9; } } catch {}
-if (!wIntro) who.classList.add("go");
-function dither(img) {
-  try {
-    const d = Math.min(3, Math.ceil(devicePixelRatio || 1)), n = 36 * d; whoC.width = whoC.height = n;
-    const g = whoC.getContext("2d", { willReadFrequently: true }); g.imageSmoothingQuality = "high"; g.drawImage(img, 0, 0, n, n);
-    const px = g.getImageData(0, 0, n, n), a = px.data, B = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], L = 6;
-    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
-      const i = (y * n + x) * 4; let v = (0.2126 * a[i] + 0.7152 * a[i + 1] + 0.0722 * a[i + 2]) / 255;
-      v = Math.min(1, Math.max(0, (v - 0.5) * 1.15 + 0.5)); const t = (B[(((y / d) | 0) & 3) * 4 + (((x / d) | 0) & 3)] + 0.5) / 16;
-      const q = Math.min(L - 1, Math.floor(v * (L - 1) + t)) / (L - 1) * 255; a[i] = a[i + 1] = a[i + 2] = q;
+// ---- Discord ticker: one line, never empty
+const tk = $("tk"), WORD = { online: "в сети", idle: "отошёл", dnd: "не беспокоить", offline: "не в сети" }, KIND = { music: "слушаю", game: "играю", ide: "пишу код", other: "запущено" };
+let tkKey = "";
+const clean = (t) => String(t || "").replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu, "").replace(/\s{2,}/g, " ").trim();
+function row(dotS, parts, opts = {}) {
+  const r = h("div", "tk-r"), cv = h("span", "tk-cv"), l = h("div", "tk-l");
+  if (opts.track) r.dataset.track = "";
+  if (dotS) { const d = h("span", "dot"); d.dataset.s = dotS; l.appendChild(d); }
+  parts.forEach(([cls, txt, data]) => { const s = h("span", cls, clean(txt)); if (data) Object.assign(s.dataset, data); l.appendChild(s); });
+  const hasArt = opts.art && opts.art.length;
+  if (!hasArt) r.classList.add("na");
+  r.append(...(hasArt ? [cv, l] : [l]));
+  if (opts.track) { const b = h("i", "tk-bar"), bb = h("b"); bb.dataset.bar = ""; b.appendChild(bb); r.appendChild(b); }
+  if (hasArt) coverImg(opts.art, opts.alt || "").then((im) => { if (im) cv.appendChild(im); else cv.classList.add("none"); });
+  return r;
+}
+function renderTk(m) {
+  const acts = m.live ? (m.activities || []) : [], on = m.live && m.status !== "offline";
+  const music = acts.find((a) => a.kind === "music"), other = acts.find((a) => a !== music && a.kind !== "music");
+  const ls = lastSeen(m);
+  const key = JSON.stringify([m.live, m.status, music && [music.title, music.start, music.end], other && [other.app, other.start], !on && ls && ls.at, m.name ? 1 : 0]);
+  if (key === tkKey) return; tkKey = key;
+  const rows = [];
+  if (!m.live && !m.name) rows.push(row("", [["", "подключаюсь к Discord…"]]));
+  else if (on) {
+    const st = m.status;
+    if (music) {
+      const ps = [["", KIND.music], ["tk-t", `${music.title}${music.sub ? " — " + music.sub : ""}`]];
+      if (music.end > music.start) ps.push(["tk-tm", "", { start: music.start, end: music.end }]);
+      rows.push(row(st, ps, { track: music.end > music.start, art: music.art, alt: `Обложка: ${music.title}` }));
     }
-    g.putImageData(px, 0, 0); who.classList.add("dith");
-  } catch { who.classList.remove("dith"); }
-}
-function setAv(url) {
-  if (!url || whoI.dataset.u === url) return; whoI.dataset.u = url;
-  if (url.includes("workers.dev")) whoI.crossOrigin = "anonymous"; else whoI.removeAttribute("crossorigin");
-  whoI.onload = () => { avReady = true; who.classList.add("ready"); dither(whoI); wNext(); };
-  whoI.onerror = () => { const alt = wState && wState.avs && wState.avs.find((u) => u !== url); if (alt) setAv(alt); else { avReady = true; who.classList.add("noav"); wNext(); } };
-  whoI.src = url;
-}
-function statusHTML() {
-  const s = wState; if (!s) return 'fetch discord…<span class="cur1"></span>';
-  let t = WORD[s.status] || "offline";
-  if (s.status === "offline" && s.seen) t += ` · ${shortAgo(s.seen)}`;
-  return t + (s.cached ? '<span class="cch">cached</span>' : "");
-}
-function wPaint() {
-  const s = wState;
-  who.dataset.s = !s ? "loading" : s.status in WORD ? s.status : "offline";
-  if (wPhase >= 9) whoS.innerHTML = statusHTML();
-  const a = s && s.act; whoA.classList.toggle("has", !!a); whoAt.textContent = a || "";
-}
-// intro: 1 fetch line 120 ms, 2 avatar scan reveal 360 ms, 3 nick typed 28 ms/char, 4 status with [ ok ]
-function wNext() {
-  if (wPhase === 1 && avReady) { wPhase = 2; who.classList.add("rev"); requestAnimationFrame(() => requestAnimationFrame(() => who.classList.add("go"))); setTimeout(() => { wPhase = 3; wType(); }, 360); }
-}
-function wType() {
-  const t = "relocpe"; whoN.textContent = ""; let i = 0;
-  const k = () => { whoN.textContent = t.slice(0, ++i); if (i < t.length) setTimeout(k, 28); else { wPhase = 4; wDone(); } };
-  k();
-}
-function wDone() {
-  if (wPhase < 4) return;
-  if (!wState) { setTimeout(wDone, 150); return; }
-  wPhase = 9; whoS.innerHTML = statusHTML() + ' <span class="ok">[ ok ]</span>';
-  setTimeout(() => { whoS.innerHTML = statusHTML(); }, 1400);
-  try { sessionStorage.setItem("relocpe.who", "1"); } catch {}
-}
-function whoIntro() {
-  if (!wIntro || wPhase) return;
-  whoN.textContent = ""; whoS.innerHTML = '> fetch discord…<span class="cur1"></span>';
-  setTimeout(() => { wPhase = 1; if (avReady) wNext(); else setTimeout(() => { if (wPhase === 1) { avReady = true; wNext(); } }, 2500); }, 120);
-}
-if (wIntro) { whoN.textContent = ""; whoS.textContent = ""; }
-function onPresence(m) {
-  const A = { music: "слушает", game: "играет", ide: "кодит", other: "запущено" };
-  if (m.live) {
-    const acts = m.activities || [], main = acts.find((x) => x.kind === "music") || acts.find((x) => x.kind === "game" || x.kind === "ide") || acts[0];
-    const act = m.status !== "offline" && main ? (main.kind === "music" ? `${A.music} · ${main.title}${main.sub ? " — " + main.sub : ""}` : `${A[main.kind] || "запущено"} · ${main.app || main.title}`) : "";
-    const ls = lastSeen(m), av = (m.avatar || [])[0] || "";
-    wState = { status: m.status || "offline", act, seen: m.status === "offline" && ls ? ls.at : 0, av, avs: m.avatar || [] };
-    try { localStorage.setItem(WK, JSON.stringify({ status: wState.status, act, av, at: Date.now() })); } catch {}
-    setAv(av);
-  } else if (m.name) {
-    if (wState && !wState.cached && wState.status) return; // keep what we had
-    let c = null; try { c = JSON.parse(localStorage.getItem(WK) || "null"); } catch {}
-    if (c) { wState = { status: c.status, act: "", seen: c.status === "offline" ? c.at : 0, cached: true, av: c.av }; setAv(c.av); }
-    else wState = { status: "offline", act: "", seen: 0 };
+    if (other) { const ps = [["", KIND[other.kind] || "запущено"], ["tk-t", other.app + (other.sub ? " · " + other.sub : "")]]; if (other.start) ps.push(["tk-tm", "", { start: other.start }]); rows.push(row(music ? "" : st, ps, { art: other.art, alt: other.app })); }
+    if (!rows.length) rows.push(row(st, [["tk-t", WORD[st] || "в сети"], ["", "· ничего не запущено"]]));
+  } else {
+    const was = ls ? `был ${ago(ls.at)}` : "";
+    const ps = [["tk-t", m.live ? "не в сети" : "Discord не ответил"]]; if (was) ps.push(["", "· " + was, ls ? { ago: ls.at } : null]);
+    rows.push(row("offline", ps));
+    if (ls && ls.act && ls.act.title) rows.push(row("", [["", ls.act.kind === "music" ? "последний трек" : "последнее"], ["tk-t", ls.act.title + (ls.act.sub ? " — " + ls.act.sub : "")]], { art: ls.act.art, alt: `Обложка: ${ls.act.title}` }));
   }
-  if (!avReady && wState && !wState.av) { avReady = true; who.classList.add("noav"); wNext(); }
-  wPaint();
+  tk.replaceChildren(...rows); tickTimes(tk);
+  tk.querySelectorAll("[data-ago]").forEach((e) => { const at = +e.dataset.ago; e.removeAttribute("data-ago"); e.dataset.was = at; e.textContent = "· был " + ago(at); });
 }
-who.addEventListener("click", () => {
-  copyText("relocpe"); const keep = whoS.innerHTML; whoS.textContent = "скопировано";
-  clearTimeout(who._t); who._t = setTimeout(() => { whoS.innerHTML = wPhase >= 9 ? statusHTML() : keep; }, 1200);
-});
-setInterval(() => { if (wPhase >= 9 && wState && wState.seen) whoS.innerHTML = statusHTML(); }, 60000);
-
-presenceCard($("card"), { onView: (p, m) => onPresence(m) });
-if (!wIntro) wPaint();
+renderTk({ live: false, status: "unknown", activities: [] });
+watch(renderTk); startTicker(tk);
+setInterval(() => tk.querySelectorAll("[data-was]").forEach((e) => { e.textContent = "· был " + ago(+e.dataset.was); }), 60000);
