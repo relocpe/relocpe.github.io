@@ -17,8 +17,12 @@
 <div class="grain" aria-hidden="true"></div>
 <div class="boot" id="boot" aria-hidden="true"><pre id="bootLog"></pre></div>
 
+<button class="who" id="who" type="button" data-nosnd data-cl="копировать" data-s="loading" aria-label="Discord: relocpe. Нажми, чтобы скопировать ник">
+  <span class="who-av" aria-hidden="true"><img class="who-i" id="whoI" alt="" decoding="async"><canvas class="who-c" id="whoC"></canvas><i class="who-scan"></i></span>
+  <span class="who-tx"><span class="who-n" id="whoN">relocpe</span><span class="who-s" id="whoS" aria-live="polite">fetch</span></span>
+  <span class="who-a" id="whoA" aria-hidden="true"><span id="whoAt"></span></span>
+</button>
 <header class="hud">
-  <a class="hud-who" href="#ping" data-cl="связь"><span class="hd" data-pst data-s="unknown"></span><span data-psttxt>discord</span></a>
   <nav class="hud-nav" aria-label="Разделы"><a href="#work" data-cl="перейти">репо</a><a href="#ping" data-cl="перейти">связь</a></nav>
   <button class="snd" id="snd" type="button" data-nosnd aria-pressed="false" data-cl="звук"><span class="snd-b" aria-hidden="true"><i></i><i></i><i></i></span><span id="sndL">звук выкл</span></button>
 </header>

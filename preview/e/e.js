@@ -1,3 +1,4 @@
+import { lastSeen, copyText } from "./core.js";
 import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, pinned, through, spaceNav, cursor, copies, reveal, chars, pushedDates, presenceCard, grain } from "./core.js";
 
 const v = bgVideo($("v"));
@@ -19,7 +20,7 @@ function boot() {
     ["95", "circuit_create", "Establishing a Tor circuit"], ["100", "done", "Done"],
   ];
   let i = 0, end = false, tm;
-  const fin = () => { if (end) return; end = true; clearTimeout(tm); box.classList.add("done"); setTimeout(typeNick, 380); removeEventListener("keydown", fin); removeEventListener("pointerdown", fin); };
+  const fin = () => { if (end) return; end = true; clearTimeout(tm); box.classList.add("done"); setTimeout(typeNick, 380); setTimeout(whoIntro, 420); removeEventListener("keydown", fin); removeEventListener("pointerdown", fin); };
   const step = () => {
     if (i >= L.length) { tm = setTimeout(fin, 320); return; }
     const [p, k, s] = L[i++], line = document.createElement("div");
@@ -67,4 +68,91 @@ copies();
 cursor($("cur"), $("curT"), { k: COARSE ? 1 : 0.32 });
 smooth(0.09);
 spaceNav([hero, $("work"), ping]);
-presenceCard($("card"));
+
+// ---- discord block, top left: avatar + nick + status word, revealed like a process in the boot log
+const who = $("who"), whoI = $("whoI"), whoC = $("whoC"), whoS = $("whoS"), whoN = $("whoN"), whoA = $("whoA"), whoAt = $("whoAt");
+const WK = "relocpe:who", WORD = { online: "online", idle: "idle", dnd: "не беспокоить", offline: "offline" };
+const shortAgo = (t) => { const m = Math.max(0, (Date.now() - t) / 6e4); return m < 2 ? "только что" : m < 60 ? `${Math.round(m)}м назад` : m < 1440 ? `${Math.round(m / 60)}ч назад` : `${Math.round(m / 1440)}д назад`; };
+let wState = null, wIntro = !RM && !new URLSearchParams(location.search).has("noboot"), wPhase = wIntro ? 0 : 9, avReady = false;
+try { if (sessionStorage.getItem("relocpe.who")) { wIntro = false; wPhase = 9; } } catch {}
+if (!wIntro) who.classList.add("go");
+function dither(img) {
+  try {
+    const d = Math.min(3, Math.ceil(devicePixelRatio || 1)), n = 36 * d; whoC.width = whoC.height = n;
+    const g = whoC.getContext("2d", { willReadFrequently: true }); g.imageSmoothingQuality = "high"; g.drawImage(img, 0, 0, n, n);
+    const px = g.getImageData(0, 0, n, n), a = px.data, B = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5], L = 6;
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const i = (y * n + x) * 4; let v = (0.2126 * a[i] + 0.7152 * a[i + 1] + 0.0722 * a[i + 2]) / 255;
+      v = Math.min(1, Math.max(0, (v - 0.5) * 1.15 + 0.5)); const t = (B[(((y / d) | 0) & 3) * 4 + (((x / d) | 0) & 3)] + 0.5) / 16;
+      const q = Math.min(L - 1, Math.floor(v * (L - 1) + t)) / (L - 1) * 255; a[i] = a[i + 1] = a[i + 2] = q;
+    }
+    g.putImageData(px, 0, 0); who.classList.add("dith");
+  } catch { who.classList.remove("dith"); }
+}
+function setAv(url) {
+  if (!url || whoI.dataset.u === url) return; whoI.dataset.u = url;
+  if (url.includes("workers.dev")) whoI.crossOrigin = "anonymous"; else whoI.removeAttribute("crossorigin");
+  whoI.onload = () => { avReady = true; who.classList.add("ready"); dither(whoI); wNext(); };
+  whoI.onerror = () => { const alt = wState && wState.avs && wState.avs.find((u) => u !== url); if (alt) setAv(alt); else { avReady = true; who.classList.add("noav"); wNext(); } };
+  whoI.src = url;
+}
+function statusHTML() {
+  const s = wState; if (!s) return 'fetch discord…<span class="cur1"></span>';
+  let t = WORD[s.status] || "offline";
+  if (s.status === "offline" && s.seen) t += ` · ${shortAgo(s.seen)}`;
+  return t + (s.cached ? '<span class="cch">cached</span>' : "");
+}
+function wPaint() {
+  const s = wState;
+  who.dataset.s = !s ? "loading" : s.status in WORD ? s.status : "offline";
+  if (wPhase >= 9) whoS.innerHTML = statusHTML();
+  const a = s && s.act; whoA.classList.toggle("has", !!a); whoAt.textContent = a || "";
+}
+// intro: 1 fetch line 120 ms, 2 avatar scan reveal 360 ms, 3 nick typed 28 ms/char, 4 status with [ ok ]
+function wNext() {
+  if (wPhase === 1 && avReady) { wPhase = 2; who.classList.add("rev"); requestAnimationFrame(() => requestAnimationFrame(() => who.classList.add("go"))); setTimeout(() => { wPhase = 3; wType(); }, 360); }
+}
+function wType() {
+  const t = "relocpe"; whoN.textContent = ""; let i = 0;
+  const k = () => { whoN.textContent = t.slice(0, ++i); if (i < t.length) setTimeout(k, 28); else { wPhase = 4; wDone(); } };
+  k();
+}
+function wDone() {
+  if (wPhase < 4) return;
+  if (!wState) { setTimeout(wDone, 150); return; }
+  wPhase = 9; whoS.innerHTML = statusHTML() + ' <span class="ok">[ ok ]</span>';
+  setTimeout(() => { whoS.innerHTML = statusHTML(); }, 1400);
+  try { sessionStorage.setItem("relocpe.who", "1"); } catch {}
+}
+function whoIntro() {
+  if (!wIntro || wPhase) return;
+  whoN.textContent = ""; whoS.innerHTML = '> fetch discord…<span class="cur1"></span>';
+  setTimeout(() => { wPhase = 1; if (avReady) wNext(); else setTimeout(() => { if (wPhase === 1) { avReady = true; wNext(); } }, 2500); }, 120);
+}
+if (wIntro) { whoN.textContent = ""; whoS.textContent = ""; }
+function onPresence(m) {
+  const A = { music: "слушает", game: "играет", ide: "кодит", other: "запущено" };
+  if (m.live) {
+    const acts = m.activities || [], main = acts.find((x) => x.kind === "music") || acts.find((x) => x.kind === "game" || x.kind === "ide") || acts[0];
+    const act = m.status !== "offline" && main ? (main.kind === "music" ? `${A.music} · ${main.title}${main.sub ? " — " + main.sub : ""}` : `${A[main.kind] || "запущено"} · ${main.app || main.title}`) : "";
+    const ls = lastSeen(m), av = (m.avatar || [])[0] || "";
+    wState = { status: m.status || "offline", act, seen: m.status === "offline" && ls ? ls.at : 0, av, avs: m.avatar || [] };
+    try { localStorage.setItem(WK, JSON.stringify({ status: wState.status, act, av, at: Date.now() })); } catch {}
+    setAv(av);
+  } else if (m.name) {
+    if (wState && !wState.cached && wState.status) return; // keep what we had
+    let c = null; try { c = JSON.parse(localStorage.getItem(WK) || "null"); } catch {}
+    if (c) { wState = { status: c.status, act: "", seen: c.status === "offline" ? c.at : 0, cached: true, av: c.av }; setAv(c.av); }
+    else wState = { status: "offline", act: "", seen: 0 };
+  }
+  if (!avReady && wState && !wState.av) { avReady = true; who.classList.add("noav"); wNext(); }
+  wPaint();
+}
+who.addEventListener("click", () => {
+  copyText("relocpe"); const keep = whoS.innerHTML; whoS.textContent = "скопировано";
+  clearTimeout(who._t); who._t = setTimeout(() => { whoS.innerHTML = wPhase >= 9 ? statusHTML() : keep; }, 1200);
+});
+setInterval(() => { if (wPhase >= 9 && wState && wState.seen) whoS.innerHTML = statusHTML(); }, 60000);
+
+presenceCard($("card"), { onView: (p, m) => onPresence(m) });
+if (!wIntro) wPaint();
