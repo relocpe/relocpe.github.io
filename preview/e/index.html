@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>relocpe</title>
+<meta name="description" content="relocpe: репозитории, Discord, контакты">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="../shared/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../shared/fonts/JetBrainsMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../poster5.jpg" as="image">
+<link rel="stylesheet" href="e.css">
+</head>
+<body>
+<div class="vbox" aria-hidden="true"><video class="bgv" id="v" muted playsinline webkit-playsinline loop></video></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="boot" id="boot" aria-hidden="true"><pre id="bootLog"></pre></div>
+
+<header class="hud">
+  <a class="hud-who" href="#ping" data-cl="связь"><span class="hd" data-pst data-s="unknown"></span><span data-psttxt>discord</span></a>
+  <nav class="hud-nav" aria-label="Разделы"><a href="#work" data-cl="перейти">репо</a><a href="#ping" data-cl="перейти">связь</a></nav>
+  <button class="snd" id="snd" type="button" data-nosnd aria-pressed="false" data-cl="звук"><span class="snd-b" aria-hidden="true"><i></i><i></i><i></i></span><span id="sndL">звук выкл</span></button>
+</header>
+
+<main>
+  <section class="hero" id="top" data-stop>
+    <div class="hero-pin">
+      <h1 class="nick" id="nick" aria-label="<relocpe />"><span class="nick-t" id="nickT" aria-hidden="true">&lt;relocpe /&gt;</span><span class="caret" aria-hidden="true"></span></h1>
+      <p class="hint" aria-hidden="true"><span>пробел</span> вниз</p>
+    </div>
+  </section>
+
+  <section class="work" id="work" data-stop aria-labelledby="workH">
+    <h2 class="path" id="workH" data-rv><span class="pr">~/</span>repos</h2>
+
+    <article class="repo" data-rv>
+      <div class="repo-h">
+        <span class="repo-n">01</span>
+        <h3 class="repo-name"><a href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-cl="открыть" class="tw">Ya.Music-RPC</a></h3>
+      </div>
+      <div class="repo-b">
+        <div class="repo-txt">
+          <p class="repo-d">Трек из Яндекс Музыки в статусе Discord и мини-плеер в строке меню.</p>
+          <dl class="repo-meta">
+            <div><dt>стек</dt><dd>Swift · macOS</dd></div>
+            <div><dt>лицензия</dt><dd>MIT</dd></div>
+            <div><dt>обновлён</dt><dd><time data-pushed datetime="2026-10-26T12:09:14Z">26.10.2026</time></dd></div>
+          </dl>
+          <div class="clone"><code><span class="pr">$</span> git clone github.com/relocpe/Ya.Music-RPC</code><button class="cp" type="button" data-copy="git clone https://github.com/relocpe/Ya.Music-RPC" data-cl="копировать"><span class="cp-l">копировать</span></button></div>
+        </div>
+        <figure class="shot" id="shot"><div class="shot-i"><img src="../shared/ya-music-rpc.jpg" width="546" height="500" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" loading="lazy" decoding="async"></div><figcaption>мини-плеер в строке меню</figcaption></figure>
+      </div>
+    </article>
+
+    <article class="repo" data-rv>
+      <div class="repo-h">
+        <span class="repo-n">02</span>
+        <h3 class="repo-name"><a href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-cl="открыть" class="tw">Nimbus</a></h3>
+      </div>
+      <div class="repo-b">
+        <div class="repo-txt">
+          <p class="repo-d">zapret с интерфейсом: Discord и YouTube без блокировок и без терминала.</p>
+          <p class="fork">форк <a href="https://github.com/Flowseal/zapret-mac-discord-youtube" target="_blank" rel="noopener" data-cl="оригинал">Flowseal/zapret-mac-discord-youtube</a></p>
+          <dl class="repo-meta">
+            <div><dt>стек</dt><dd>C · Swift · macOS 14+</dd></div>
+            <div><dt>лицензия</dt><dd>MIT</dd></div>
+            <div><dt>обновлён</dt><dd><time data-pushed datetime="2026-10-26T08:03:29Z">26.10.2026</time></dd></div>
+          </dl>
+          <div class="clone"><code><span class="pr">$</span> git clone github.com/relocpe/Nimbus</code><button class="cp" type="button" data-copy="git clone https://github.com/relocpe/Nimbus" data-cl="копировать"><span class="cp-l">копировать</span></button></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="ping" id="ping" data-stop aria-labelledby="pingH">
+    <div class="ping-in">
+      <h2 class="path" id="pingH" data-rv><span class="pr">~/</span>связь</h2>
+      <div class="contacts" data-rv>
+        <a class="tg" href="https://t.me/relocpe" target="_blank" rel="noopener" data-cl="написать"><span class="lb">telegram</span><span class="big">@relocpe</span></a>
+        <ul class="list">
+          <li><span class="lb">канал</span><a href="https://t.me/portfade" target="_blank" rel="noopener" data-cl="открыть">@portfade</a></li>
+          <li><span class="lb">discord</span><span class="v">relocpe</span><button class="cp" type="button" data-copy="relocpe" data-cl="копировать"><span class="cp-l">копировать</span></button></li>
+          <li><span class="lb">github</span><a href="https://github.com/relocpe" target="_blank" rel="noopener" data-cl="открыть">relocpe</a></li>
+        </ul>
+      </div>
+      <div class="card" id="card" aria-live="polite" data-rv></div>
+    </div>
+  </section>
+</main>
+<footer class="foot"><span>relocpe</span><a href="#top" data-cl="наверх">наверх</a></footer>
+<div class="cur" id="cur" aria-hidden="true"><span class="cur-b"></span><span class="cur-t" id="curT"></span></div>
+<script type="module" src="e.js"></script>
+</body>
+</html>
