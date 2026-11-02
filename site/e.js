@@ -1,5 +1,5 @@
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js";
-import { popUpdate } from "./pop.js";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1102a";
+import { popUpdate } from "./pop.js?v=1102a";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
 sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });
@@ -159,12 +159,6 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
-
-// ---- contacts frame starts level with the top of @relocpe (sticky from there)
-{ const pl = document.querySelector(".ping-l"), tb = document.querySelector(".tg-b");
-  // layout offset (ignores the reveal transforms): sum offsetTop up to the column
-  const fit = () => { let y = 0, n = tb; const stop = pl.offsetParent; while (n && n !== stop) { y += n.offsetTop; n = n.offsetParent; } ping.style.setProperty("--wt", Math.max(0, Math.round(y - pl.offsetTop)) + "px"); };
-  fit(); addEventListener("resize", fit); if (document.fonts) document.fonts.ready.then(fit); if ("ResizeObserver" in window) new ResizeObserver(fit).observe(pl); }
 
 // ---- cursor: ring over media
 cursor($("cur"), $("curT"), { k: 0.28 });
