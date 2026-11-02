@@ -2,15 +2,16 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>&lt;relocpe /&gt;</title>
-<!-- SITE URL: change via ./set-base-url.sh https://your.domain/ -->
-<meta name="description" content="relocpe">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>relocpe</title>
+<meta name="description" content="relocpe: репозитории Ya.Music-RPC и Nimbus, Discord, контакты">
+<meta name="theme-color" content="#050505">
+<meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://relocpe.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="relocpe">
 <meta property="og:title" content="relocpe">
-<meta property="og:description" content="relocpe">
+<meta property="og:description" content="relocpe: репозитории Ya.Music-RPC и Nimbus, Discord, контакты">
 <meta property="og:url" content="https://relocpe.github.io/">
 <meta property="og:image" content="https://relocpe.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -19,86 +20,94 @@
 <meta name="twitter:title" content="relocpe">
 <meta name="twitter:description" content="relocpe">
 <meta name="twitter:image" content="https://relocpe.github.io/og-image.png">
-<meta name="theme-color" content="#040607">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="site/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-<link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/JetBrainsMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css">
-<script>try{var q=new URLSearchParams(location.search);if(q.has('og'))document.documentElement.classList.add('og')}catch(e){}</script>
-<script src="config.js"></script>
-<script type="module" src="app.js"></script>
+<link rel="preload" href="poster5.jpg" as="image">
+<link rel="stylesheet" href="site/e.css">
 </head>
 <body>
-<canvas id="bgb" width="24" height="14" aria-hidden="true"></canvas>
-<video id="bgv" muted autoplay loop playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
-<script>(function(){var L=(window.SV_VIDEOS||[]).filter(function(x){return x&&x.src});if(!L.length)L=[{src:"bg.mp4",poster:"poster.jpg"}];var q=new URLSearchParams(location.search),i=parseInt(q.get("bg"),10);var b=L[i>=0&&i<L.length?i:Math.floor(Math.random()*L.length)];var v=document.getElementById("bgv");if(b.poster){v.poster=b.poster;document.documentElement.style.setProperty("--poster","url("+b.poster+")")}v.muted=true;var sm=b.srcSmall&&q.get("hq")!=="1"&&((matchMedia("(pointer:coarse)").matches&&Math.min(screen.width,screen.height)<=820)||(navigator.connection&&navigator.connection.saveData));v.src=sm?b.srcSmall:b.src;window.SV_BG=b})()</script>
-<div class="poster" aria-hidden="true"></div>
-<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vbox" id="vbox" aria-hidden="true"><video class="bgv" id="v" muted playsinline webkit-playsinline loop></video><i class="shade" id="shade"></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="boot" id="boot" aria-hidden="true"><div class="boot-log" id="bootLog"></div></div>
 
-<div id="loader" class="loader" aria-hidden="true">
-  <pre class="ld-log" id="ldLog"></pre>
-</div>
-
-<header class="chrome">
-  <a class="mark" href="#index" data-go="0" aria-label="relocpe — top">relocpe</a>
-  <div class="chrome-r">
-    <nav class="nav" id="nav" aria-label="sections">
-      <a href="#index" data-go="0" class="on">index</a>
-      <a href="#work" data-go="1">work</a>
-      <a href="#contact" data-go="2">contact</a>
-    </nav>
-    <button class="sound" id="muteBtn" type="button" aria-pressed="false" aria-label="toggle sound">sound: <span id="soundState">off</span></button>
-  </div>
+<header class="hud" id="hud">
+  <a class="hud-me" href="#top" data-cl="наверх">relocpe</a>
+  <nav class="hud-nav" aria-label="Разделы"><a href="#work" data-sec="work" data-cl="перейти">репо</a><a href="#ping" data-sec="ping" data-cl="перейти">связь</a></nav>
+  <button class="snd" id="snd" type="button" data-nosnd aria-pressed="false" data-cl="звук"><span id="sndL">звук: выкл</span></button>
 </header>
+<div class="prog" aria-hidden="true"><i id="progB"></i></div>
 
-<main id="content">
-  <section class="sec s-index" id="index" data-i="0">
-    <h1 class="name" aria-label="relocpe"><span class="br" aria-hidden="true">&lt;</span><span class="nm" id="nameTxt">relocpe</span><span class="br br-c" aria-hidden="true">/&gt;</span></h1>
-  </section>
-
-  <section class="sec s-work" id="work" data-i="1">
-    <div class="wrap">
-      <h2 class="lbl">work</h2>
-      <ul class="cards" id="cards">
-        <!--cards-->
-        <li><a class="card" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-meta="c, swift / 0 stars / upd 2026-10-23 / fork" data-pv="" data-mono="Ni"><span class="card-pv card-mono" aria-hidden="true">Ni</span><span class="card-b"><span class="card-h"><span class="card-t">Nimbus</span><span class="arr" aria-hidden="true">↗</span></span><span class="card-m">c, swift / 0 stars / upd 2026-10-23 / fork</span><span class="card-d">macOS menu-bar front end for zapret: bypasses Discord and YouTube blocking without the terminal. Strategy tester and editable domain lists, for macOS 14+.</span></span></a></li>
-        <li><a class="card" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-meta="swift, shell / 0 stars / upd 2026-10-23" data-pv="previews/ya-music-rpc.jpg" data-mono="YM"><img class="card-pv" src="previews/ya-music-rpc.jpg" alt="" loading="lazy" decoding="async"><span class="card-b"><span class="card-h"><span class="card-t">Ya.Music-RPC</span><span class="arr" aria-hidden="true">↗</span></span><span class="card-m">swift, shell / 0 stars / upd 2026-10-23</span><span class="card-d">Shows the current Yandex Music desktop track in Discord Rich Presence and adds a mini player to the macOS menu bar. For Apple Silicon Macs.</span></span></a></li>
-        <!--/cards-->
-      </ul>
+<main>
+  <section class="hero" id="top">
+    <div class="hero-pin">
+      <h1 class="nick" id="nick" aria-label="relocpe"><span class="nick-t" id="nickT" aria-hidden="true">&lt;relocpe /&gt;</span><span class="caret" id="caret" aria-hidden="true"></span></h1>
     </div>
-    <p class="stack" id="stack"><span class="stack-k">stack:</span> <span id="stackV">swift / swiftui / appkit / c / shell / javascript / three.js / glsl / github actions</span></p>
   </section>
 
-  <section class="sec s-contact" id="contact" data-i="2">
-    <div class="wrap ct-wrap">
-      <div class="ct-col">
-        <h2 class="lbl">contact</h2>
-        <ul class="ct">
-          <li class="ct-row ct-main"><span class="ct-k">telegram</span><span class="ct-vs"><a class="ct-v ct-pri" id="tgMain" href="https://t.me/relocpe" target="_blank" rel="noopener">@relocpe</a><a class="ct-write" id="tgWrite" href="https://t.me/relocpe" target="_blank" rel="noopener" aria-label="write in telegram">write<span class="arr" aria-hidden="true">↗</span></a><span class="ct-alias" id="tgAlias">aka <a href="https://t.me/portfade" target="_blank" rel="noopener">@portfade</a></span></span></li>
-          <li class="ct-row"><span class="ct-k">github</span><span class="ct-vs"><a class="ct-v" href="https://github.com/relocpe" target="_blank" rel="noopener">relocpe<span class="arr" aria-hidden="true">↗</span></a></span></li>
-          <li class="ct-row"><span class="ct-k">discord</span><span class="ct-vs"><button class="ct-v ct-copy" type="button" id="dcCopy" aria-label="copy discord username relocpe">relocpe<svg class="cp" width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M10.5 3.5v-.5a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></button></span></li>
-        </ul>
-      </div>
-      <aside class="presence" id="presence" aria-live="polite">
-        <div class="pr-head"><span class="pr-dot" id="prDot"></span><span class="pr-st" id="prStatus">discord</span></div>
-        <div class="pr-body">
-          <div class="pr-av"><img id="prAvatar" alt="" hidden></div>
-          <div class="pr-txt">
-            <div class="pr-line" id="prLine">&nbsp;</div>
-            <div class="pr-sub" id="prSub">&nbsp;</div>
+  <section class="work" id="work" aria-labelledby="workH">
+    <h2 class="sec-h" id="workH" data-lg><span data-ln>репозитории</span></h2>
+    <div class="work-g">
+      <div class="pjs">
+        <article class="pj" data-pj="0">
+          <div class="pj-in" data-lg>
+            <span class="pj-n" data-ln>01</span>
+            <h3 class="pj-name" data-ln><a href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" data-cl="открыть ↗">Ya.Music-RPC</a></h3>
+            <p class="pj-d" data-ln>Показывает трек из Яндекс Музыки в статусе Discord и добавляет мини-плеер в строку меню.</p>
+            <p class="pj-meta" data-ln>Swift · macOS · MIT · обновлён <time data-pushed datetime="2026-10-26T12:09:14Z">26.10.2026</time></p>
+            <div class="clone" data-ln><code>git clone github.com/relocpe/Ya.Music-RPC</code><button class="cp" type="button" data-copy="git clone https://github.com/relocpe/Ya.Music-RPC" data-cl="копировать"><span class="cp-l">копировать</span></button></div>
+            <a class="m-media mf" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" aria-label="Ya.Music-RPC на GitHub"><span class="mf-ya"><img src="site/ya-music-rpc.jpg" width="546" height="500" alt="Мини-плеер Ya.Music-RPC в строке меню macOS" loading="lazy" decoding="async"></span><i class="mf-g"></i></a>
           </div>
-          <img class="pr-art" id="prArt" alt="" hidden>
+        </article>
+        <article class="pj" data-pj="1">
+          <div class="pj-in" data-lg>
+            <span class="pj-n" data-ln>02</span>
+            <h3 class="pj-name" data-ln><a href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" data-cl="открыть ↗">Nimbus</a></h3>
+            <p class="pj-d" data-ln>Запускает zapret из строки меню macOS: Discord и YouTube без блокировок и без терминала.</p>
+            <p class="pj-meta" data-ln>C · Swift · macOS 14+ · MIT · обновлён <time data-pushed datetime="2026-10-26T08:03:29Z">26.10.2026</time></p>
+            <p class="pj-fork" data-ln>форк · <a href="https://github.com/Flowseal/zapret-mac-discord-youtube" target="_blank" rel="noopener" data-cl="оригинал ↗">Flowseal/zapret-mac-discord-youtube</a></p>
+            <div class="clone" data-ln><code>git clone github.com/relocpe/Nimbus</code><button class="cp" type="button" data-copy="git clone https://github.com/relocpe/Nimbus" data-cl="копировать"><span class="cp-l">копировать</span></button></div>
+            <a class="m-media mf" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" aria-label="Nimbus на GitHub" data-nimbus></a>
+          </div>
+        </article>
+      </div>
+      <div class="stage-col" aria-hidden="true">
+        <div class="stage-w">
+          <div class="stage">
+            <a class="mf st-l" data-l="0" href="https://github.com/relocpe/Ya.Music-RPC" target="_blank" rel="noopener" tabindex="-1" data-cl="открыть ↗" data-ring><span class="mf-ya"><img src="site/ya-music-rpc.jpg" width="546" height="500" alt="" decoding="async"></span><i class="mf-g"></i></a>
+            <a class="mf st-l" data-l="1" href="https://github.com/relocpe/Nimbus" target="_blank" rel="noopener" tabindex="-1" data-cl="открыть ↗" data-ring data-nimbus></a>
+          </div>
+          <p class="stage-c"><span class="on">мини-плеер в строке меню</span><span>стратегии zapret из macos/Payload/strategies.tsv</span></p>
         </div>
-      </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="bridge" id="bridge" aria-hidden="true"></div>
+
+  <section class="ping" id="ping" aria-labelledby="pingH">
+    <div class="ping-g">
+      <div class="ping-l">
+        <h2 class="sec-h" id="pingH" data-lg><span data-ln>связь</span></h2>
+        <div class="tg-w" data-lg>
+          <span class="tg-l" data-ln>telegram</span>
+          <a class="tg" href="https://t.me/relocpe" target="_blank" rel="noopener" data-cl="написать" data-ln><span class="tg-b">@relocpe</span></a>
+        </div>
+        <ul class="rows" data-lg>
+          <li data-ln><a class="row" href="https://t.me/portfade" target="_blank" rel="noopener" data-cl="открыть"><span class="row-i"><span class="row-v">@portfade</span><span class="row-k">канал</span></span></a></li>
+          <li data-ln><button class="row" type="button" data-copy="relocpe" data-cl="копировать" data-nosnd><span class="row-i"><span class="row-v">relocpe</span><span class="row-k"><span class="cp-l">discord · копировать</span></span></span></button></li>
+          <li data-ln><a class="row" href="https://github.com/relocpe" target="_blank" rel="noopener" data-cl="открыть ↗"><span class="row-i"><span class="row-v">relocpe</span><span class="row-k">github ↗</span></span></a></li>
+        </ul>
+        <div class="tk" id="tk" aria-live="polite"></div>
+      </div>
+      <div class="ping-r"><div class="win" id="win"></div></div>
     </div>
   </section>
 </main>
-<div class="cue" id="cue" aria-hidden="true"><span class="cue-l" id="cueL">scroll / ↑↓</span><span class="cue-t"><i></i></span></div>
-<div class="toast" id="toast" role="status"></div>
-<noscript><style>.loader{display:none}</style></noscript>
+<footer class="foot"><span>relocpe © 2026</span><a href="#top" id="toTop" data-cl="наверх">наверх ↑</a></footer>
+<div class="cur" id="cur" aria-hidden="true"><span class="cur-b"></span><span class="cur-t" id="curT"></span></div>
+<script type="module" src="site/e.js"></script>
 </body>
 </html>

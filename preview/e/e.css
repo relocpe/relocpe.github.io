@@ -216,8 +216,9 @@ html:not(.js) .ln-i{transform:none}
 }
 
 /* ---- Discord profile popout */
-.dp{--dpbg:#0e0e0e;position:fixed;left:0;top:0;z-index:45;width:300px;background:var(--dpbg);border:1px solid rgba(255,255,255,.09);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.65),0 2px 8px rgba(0,0,0,.4);font-size:13px;line-height:1.4;color:var(--fg);opacity:0;transform:scale(.96);transition:opacity .15s ease-out,transform .15s cubic-bezier(.2,.8,.2,1);will-change:transform,opacity}
-.dp.on{opacity:1;transform:none}
+.dp{--dpbg:#0e0e0e;position:fixed;left:0;top:0;z-index:45;width:300px;background:var(--dpbg);border:1px solid rgba(255,255,255,.09);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.65),0 2px 8px rgba(0,0,0,.4);font-size:13px;line-height:1.4;color:var(--fg);opacity:0;transform:translateY(4px) scale(.98);transition:opacity .1s linear,transform 0s linear .11s;will-change:transform,opacity}
+.dp.on{opacity:1;transform:none;transition:opacity .16s cubic-bezier(.2,.8,.2,1),transform .16s cubic-bezier(.2,.8,.2,1)}
+.dp.out{transform:none}
 .dp[hidden],.dp-bk[hidden]{display:none}
 .dp-bn{position:relative;height:105px;border-radius:7px 7px 0 0;overflow:hidden;background:radial-gradient(90% 170% at 100% 0%,rgba(255,176,0,.44),rgba(255,176,0,0) 62%),radial-gradient(70% 130% at 0% 100%,rgba(255,176,0,.12),transparent 70%),linear-gradient(180deg,#1d1508,#0f0c07)}
 .dp-bn::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.25))}
@@ -259,12 +260,21 @@ html:not(.js) .ln-i{transform:none}
 .dp-msg{margin-top:14px;height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--mid);text-decoration:none;transition:border-color .2s,color .2s}
 .dp-msg:hover,.dp-msg:focus-visible{color:var(--fg);border-color:rgba(255,176,0,.5);outline:none}
 .dp-x{display:none}
-.dp-bk{position:fixed;inset:0;z-index:44;background:rgba(0,0,0,.62);opacity:0;transition:opacity .15s ease-out}
-.dp-bk.on{opacity:1}
-.dp.sheet{left:50%!important;top:50%!important;width:min(340px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;transform:translate(-50%,-50%) scale(.96);transform-origin:50% 50%!important}
-.dp.sheet.on{transform:translate(-50%,-50%)}
+.dp-bk{position:fixed;inset:0;z-index:44;background:rgba(0,0,0,.62);opacity:0;transition:opacity .1s linear}
+.dp-bk.on{opacity:1;transition:opacity .22s cubic-bezier(.2,.8,.2,1)}
+.dp.sheet{left:50%!important;top:50%!important;width:min(340px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain;transform:translate(-50%,calc(-50% + 28px));transform-origin:50% 100%!important}
+.dp.sheet.on{transform:translate(-50%,-50%);transition:opacity .2s cubic-bezier(.2,.8,.2,1),transform .26s cubic-bezier(.2,.8,.2,1)}
+.dp.sheet.out{transform:translate(-50%,-50%)}
 .dp.sheet .dp-x{display:grid;place-items:center;position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:var(--fg);font:400 20px/1 var(--mono);cursor:pointer;z-index:3}
 html.dp-lock{overflow:hidden}
-#tk[role=button]{cursor:pointer;outline:none}
+#tk[role=button]{cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+button,a,.dp-bk{-webkit-tap-highlight-color:transparent}
 #tk:focus-visible{box-shadow:0 0 0 1px var(--amb);border-radius:2px}
-@media (prefers-reduced-motion:reduce){.dp,.dp-bk{transition:none}.dp{transform:none}.dp.sheet{transform:translate(-50%,-50%)}.dp-bar b{transition:none}}
+.dp .fi{animation:dpfi .18s ease-out}
+@keyframes dpfi{from{opacity:0}}
+.dp-cv.ld,.dp-avi.ld{background:#1a1a1a}
+.sk{background:#1a1a1a;border-radius:4px;color:transparent!important}
+.sk-n{width:120px;height:20px;margin-top:2px}.sk-u{width:160px;height:13px;margin-top:8px}.sk-h{width:64px;height:10px}.sk-t{width:80%;height:14px}.sk-s{width:50%;height:11px;margin-top:8px}
+.dp.skel .dp-act{min-height:118px}.dp.skel .dp-avi{box-shadow:0 0 0 6px var(--dpbg)}
+.sk-m{border-color:#1a1a1a}
+@media (prefers-reduced-motion:reduce){.dp,.dp.on,.dp-bk,.dp-bk.on{transition:opacity .1s linear}.dp,.dp.on{transform:none}.dp.sheet,.dp.sheet.on{transform:translate(-50%,-50%)}.dp-bar b{transition:none}.dp .fi{animation:none}}
