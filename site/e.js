@@ -160,6 +160,12 @@ function frame(now) {
 }
 requestAnimationFrame(frame);
 
+// ---- contacts frame starts level with the top of @relocpe (sticky from there)
+{ const pl = document.querySelector(".ping-l"), tb = document.querySelector(".tg-b");
+  // layout offset (ignores the reveal transforms): sum offsetTop up to the column
+  const fit = () => { let y = 0, n = tb; const stop = pl.offsetParent; while (n && n !== stop) { y += n.offsetTop; n = n.offsetParent; } ping.style.setProperty("--wt", Math.max(0, Math.round(y - pl.offsetTop)) + "px"); };
+  fit(); addEventListener("resize", fit); if (document.fonts) document.fonts.ready.then(fit); if ("ResizeObserver" in window) new ResizeObserver(fit).observe(pl); }
+
 // ---- cursor: ring over media
 cursor($("cur"), $("curT"), { k: 0.28 });
 document.addEventListener("pointerover", (e) => { const c = $("cur"); if (c) c.classList.toggle("ring", !!(e.target.closest && e.target.closest("[data-ring]"))); });
