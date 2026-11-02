@@ -47,16 +47,18 @@ html:not(.js) .boot{display:none}
 /* first screen */
 .hero{position:relative;height:170vh;z-index:5}
 .hero-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.nick{position:absolute;left:var(--m);top:62%;transform:translateY(-100%);font-weight:300;font-size:clamp(64px,10vw,168px);line-height:.9;letter-spacing:-.03em;white-space:nowrap;display:flex;align-items:baseline;color:#EDEDED}
+.nick{position:absolute;left:var(--m);top:62%;transform:translateY(-100%);font-weight:500;font-size:clamp(64px,10vw,168px);line-height:.9;letter-spacing:-.03em;white-space:nowrap;display:flex;align-items:baseline;color:#EDEDED}
 .nick-in{display:flex;align-items:baseline;will-change:transform}
-.nick-t{display:inline-block;clip-path:inset(-.5em -.3em -.3em -.3em)}
-.nick-t .ch{display:inline-block;font-variation-settings:"wght" 300;transform:translate3d(0,1.15em,0);transition:transform .53s linear(0,.0203,.0722,.1446,.2287,.3179,.4073,.4934,.5739,.6473,.7128,.7703,.8199,.862,.8971,.9259,.9492,.9676,.982,.9928,1.0008,1.0064,1.0102,1.0124,1.0135,1.0138,1.0135,1.0127,1.0117,1.0105,1.0093,1.0081,1.0069,1.0058,1.0048,1.0039,1.0031,1.0024,1.0019,1.0014,1.001,1)}
-.nick-t.rs .ch{transition:none}
-.nick-t .br{font-variation-settings:"wght" 200;color:#6A6A6A}
+.nick-t{display:inline-block;padding:.12em 0;margin:-.12em 0;color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(90deg,#fff 0%,#FFB000 16%,#FF5A1F 33%,#fff 50%,#FFB000 66%,#FF5A1F 83%,#fff 100%) 0 0/200% 100% repeat-x;-webkit-background-clip:text;background-clip:text;animation:nflow 3.5s linear infinite}
+@keyframes nflow{to{background-position:-200% 0}}
+.nick-t .ch{display:inline}
+.nick-t .ch.cy{-webkit-text-fill-color:#FFB000;text-shadow:0 0 .14em rgba(255,176,0,.75),0 0 .4em rgba(255,140,0,.35)}
+.nick-t .ch.lk{animation:nlock .32s cubic-bezier(.2,.7,.2,1) both}
+@keyframes nlock{0%{-webkit-text-fill-color:#fff;text-shadow:0 0 .12em #fff,0 0 .35em rgba(255,255,255,.6)}100%{-webkit-text-fill-color:transparent;text-shadow:0 0 0 transparent}}
+.nick-t .br{font-weight:200;-webkit-text-fill-color:#6A6A6A}
+.nick-t .br-s{-webkit-text-fill-color:#8A8A8A}
 .nick-t .br-l{margin-right:.15em}
 .nick-t .br-r{margin-left:.15em}
-.nick-t .ch.on{transform:none}
-html:not(.js) .nick-t .ch{transform:none}
 .caret{display:inline-block;width:.08em;height:.78em;background:#FFB000;margin-left:.1em;align-self:baseline;animation:blink 1.06s steps(1) infinite}
 @keyframes blink{50%{visibility:hidden}}
 
@@ -210,7 +212,8 @@ html:not(.js) .ln-i{transform:none}
  .caret{animation:none}
  .boot{display:none}
  .ln-i{transform:none!important;transition:none}
- .nick-t .ch{transform:none!important;transition:none}
+ .nick-t{animation:none}
+ .nick-t .ch{animation:none!important;text-shadow:none!important}
  .st-l,.mf-ya,.nb,.hud,.row-i,.tk-r{transition:none!important;animation:none!important}
 }
 
