@@ -1,4 +1,5 @@
 import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, lastSeen, coverImg, tickTimes, startTicker, h, ago } from "./core.js";
+import { popUpdate } from "./pop.js";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
 sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });
@@ -171,5 +172,5 @@ function renderTk(m) {
   tk.querySelectorAll("[data-ago]").forEach((e) => { const at = +e.dataset.ago; e.removeAttribute("data-ago"); e.dataset.was = at; e.textContent = "· был " + ago(at); });
 }
 renderTk({ live: false, status: "unknown", activities: [] });
-watch(renderTk); startTicker(tk);
+watch((m) => { renderTk(m); popUpdate(m); }); startTicker(tk);
 setInterval(() => tk.querySelectorAll("[data-was]").forEach((e) => { e.textContent = "· был " + ago(+e.dataset.was); }), 60000);
