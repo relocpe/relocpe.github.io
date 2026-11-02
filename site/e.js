@@ -27,32 +27,49 @@ if (RM || !("IntersectionObserver" in window)) groups.forEach((g) => g.classList
 else { const io = new IntersectionObserver((es) => es.forEach((x) => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { rootMargin: "0px 0px -10% 0px" }); groups.forEach((g) => io.observe(g)); }
 
 // ---- boot log, typed: 18-24 ms per char, 120 ms between lines, ~1.9 s; any key or click skips
-const nickT = $("nickT"), caret = $("caret"), nickEl = $("nick"); chars(nickT); nickT.removeAttribute("aria-label");
-nickT.dataset.t = nickT.textContent.replace(/\u00a0/g, " ");
-let typing = [];
+// ---- nick: spring mask rise (35 ms stagger), then a weight wave 300→620→300 every 10–12 s while the hero is visible;
+// letters near the cursor thicken (300→560 within 220 px). font-variation-settings per letter; monospace, so no layout shift.
+const nickT = $("nickT"), caret = $("caret"), nickEl = $("nick"), nickIn = $("nickIn"); chars(nickT); nickT.removeAttribute("aria-label");
+const ncs = [...nickT.children], nLast = ncs.length - 1;
+ncs[0].classList.add("br", "br-l"); ncs[nLast - 1].classList.add("br", "br-r"); ncs[nLast].classList.add("br");
+const lets = ncs.filter((c) => !c.classList.contains("br"));
+const W0 = 300, WW = 620, WH = 560, FINE = matchMedia("(hover:hover) and (pointer:fine)").matches;
+const hv = lets.map(() => W0), shown = lets.map(() => W0);
+const bez = (x1, y1, x2, y2) => (x) => { let t = x; for (let k = 0; k < 8; k++) { const f = 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3 - x, d = 3 * x1 * (1 - t) ** 2 + 6 * (x2 - x1) * t * (1 - t) + 3 * (1 - x2) * t * t; if (Math.abs(f) < 1e-5 || Math.abs(d) < 1e-6) break; t = clamp(t - f / d); } return 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3; };
+const wE = bez(0.4, 0, 0.2, 1);
+let typing = [], waveAt = -1, waveT = 0, mx = -1e4, my = -1e4;
 function typeNick() {
-  typing.forEach(clearTimeout); typing = []; caret.classList.remove("dim");
-  const cs = [...nickT.children];
-  if (RM) { cs.forEach((c) => c.classList.add("on")); return; }
-  cs.forEach((c) => c.classList.remove("on"));
-  const R = nickT.getBoundingClientRect().right, gap = (i) => R - (i < 0 ? cs[0].getBoundingClientRect().left : cs[i].getBoundingClientRect().right);
-  caretX = -gap(-1); lastPx = "";
-  cs.forEach((c, i) => typing.push(setTimeout(() => { c.classList.add("on"); caretX = -gap(i); lastPx = ""; }, 80 + i * 45)));
-  typing.push(setTimeout(() => caret.classList.add("dim"), 80 + cs.length * 45 + 3000));
-  typing.push(setTimeout(sweep, 80 + cs.length * 45 + 900));
+  typing.forEach(clearTimeout); typing = []; clearTimeout(waveT); waveAt = -1;
+  if (RM) { ncs.forEach((c) => c.classList.add("on")); return; }
+  nickT.classList.add("rs"); ncs.forEach((c) => c.classList.remove("on")); void nickT.offsetWidth; nickT.classList.remove("rs");
+  ncs.forEach((c, i) => typing.push(setTimeout(() => c.classList.add("on"), 60 + i * 35)));
+  typing.push(setTimeout(wave, 60 + nLast * 35 + 530));
 }
-// ---- nick: a soft amber light passes over the letters every ~7 s while the hero is on screen
-let swT = 0;
-function sweep() {
-  clearTimeout(swT);
-  if (RM) return;
-  if (!document.hidden && pinned(hero) < 0.4) { nickT.classList.remove("sw"); void nickT.offsetWidth; nickT.classList.add("sw"); }
-  swT = setTimeout(sweep, 7000);
+function wave() {
+  clearTimeout(waveT);
+  if (!document.hidden && pinned(hero) < 0.4) waveAt = performance.now();
+  waveT = setTimeout(wave, 10000 + Math.random() * 2000);
 }
-nickT.addEventListener("animationend", () => nickT.classList.remove("sw"));
-// cursor parallax target (desktop only); applied in frame()
-let pxT = 0, pyT = 0, px = 0, py = 0, lastPx = "", caretX = 0;
-if (!RM && matchMedia("(hover:hover) and (pointer:fine)").matches) addEventListener("pointermove", (e) => { pxT = (e.clientX / innerWidth - 0.5) * 2; pyT = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
+function nickFrame(now) {
+  let rs = null;
+  if (FINE && mx > -1e3) rs = lets.map((c) => c.getBoundingClientRect());
+  let waving = false;
+  for (let i = 0; i < lets.length; i++) {
+    let tgt = W0;
+    if (rs) { const r = rs[i], s = 1 - clamp(Math.hypot(mx - r.left - r.width / 2, my - r.top - r.height / 2) / 220); tgt = W0 + (WH - W0) * s * s * (3 - 2 * s); }
+    hv[i] += (tgt - hv[i]) * 0.15;
+    let w = hv[i];
+    if (waveAt >= 0) { const u = (now - waveAt - i * 40) / 380; if (u < 1) waving = true; if (u > 0 && u < 1) w = Math.max(w, W0 + (WW - W0) * (u < 0.5 ? wE(u * 2) : 1 - wE((u - 0.5) * 2))); }
+    const q = Math.round(w); if (q !== shown[i]) { shown[i] = q; lets[i].style.fontVariationSettings = `"wght" ${q}`; }
+  }
+  if (!waving) waveAt = -1;
+}
+// cursor: parallax target + hover position (fine pointers only); applied in frame()
+let pxT = 0, pyT = 0, px = 0, py = 0, lastPx = "";
+if (!RM && FINE) {
+  addEventListener("pointermove", (e) => { pxT = (e.clientX / innerWidth - 0.5) * 2; pyT = (e.clientY / innerHeight - 0.5) * 2; mx = e.clientX; my = e.clientY; }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", () => { mx = my = -1e4; pxT = pyT = 0; });
+}
 function boot() {
   const box = $("boot"), log = $("bootLog");
   if (RM || new URLSearchParams(location.search).has("noboot")) { box.classList.add("done"); box.style.display = "none"; typeNick(); return; }
@@ -106,9 +123,12 @@ function frame(now) {
   const hp = pinned(hero), k = RM ? 0 : ease.out(clamp(hp / 0.85));
   const nk = `translateY(-100%) translate3d(0,${(-k * 30).toFixed(2)}vh,0) scale(${(1 - 0.08 * k).toFixed(4)})|${(1 - clamp((hp - 0.55) / 0.35)).toFixed(3)}`;
   if (nk !== lastNk) { lastNk = nk; const [tr, op] = nk.split("|"); nickEl.style.transform = tr; nickEl.style.opacity = op; }
-  px += (pxT - px) * 0.06; py += (pyT - py) * 0.06;
-  const pk = hp < 1 ? `${(px * 10).toFixed(2)}|${(py * 6).toFixed(2)}|${caretX.toFixed(1)}` : lastPx;
-  if (pk !== lastPx) { lastPx = pk; const x = (px * 10).toFixed(2), y = (py * 6).toFixed(2); nickT.style.transform = `translate3d(${x}px,${y}px,0)`; caret.style.transform = `translate3d(${(+x + caretX).toFixed(2)}px,${y}px,0)`; }
+  if (!RM && hp < 1) {
+    px += (pxT - px) * 0.06; py += (pyT - py) * 0.06;
+    const pk = `translate3d(${(px * 6).toFixed(2)}px,${(py * 6).toFixed(2)}px,0)`;
+    if (pk !== lastPx) { lastPx = pk; nickIn.style.transform = pk; }
+    nickFrame(now);
+  }
   let sh = 0.45 + 0.4 * k, clip = "inset(0px 0px 0px 0px)";
   v.style.transform = RM ? "" : `scale(${(1 + 0.05 * k).toFixed(4)})`;
   // bridge: full screen -> 2px slit
