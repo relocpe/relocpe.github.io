@@ -106,7 +106,7 @@ hud.addEventListener("focusin", () => hud.classList.remove("hide"));
 // ---- scroll scene: hero exit, sticky repo stage, the bridge slit, the 4:5 window in contacts
 const hero = $("top"), bridge = $("bridge"), ping = $("ping"), win = $("win"), stage = document.querySelector(".stage");
 const pjs = [...document.querySelectorAll(".pj")];
-let lastClip = "", lastSh = -1, lastNk = "", cur = 0;
+let lastClip = "", lastVt = "", lastSh = -1, lastNk = "", cur = 0;
 // window tween: 0 = slit, 1 = 4:5 frame; time-based 900 ms io easing
 let wt = 0, wdir = 0, wPrev = 0;
 const ioE = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -124,7 +124,7 @@ function frame(now) {
     if (pk !== lastPx) { lastPx = pk; nickIn.style.transform = pk; }
   }
   let sh = 0.45 + 0.4 * k, clip = "inset(0px 0px 0px 0px)";
-  v.style.transform = RM ? "" : `scale(${(1 + 0.05 * k).toFixed(4)})`;
+  let vt2 = RM ? "" : `scale(${(1 + 0.05 * k).toFixed(4)})`;
   // bridge: full screen -> 2px slit
   const br = bridge.getBoundingClientRect();
   if (br.top < H) {
@@ -140,8 +140,15 @@ function frame(now) {
       const slit = [H / 2 - 1, 0, H / 2 - 1, 0], tgt = [r.top, W - r.right, H - r.bottom, r.left];
       const ins = slit.map((s, i) => lerp(s, tgt[i], q).toFixed(1) + "px");
       clip = `inset(${ins.join(" ")} round ${(4 * q).toFixed(1)}px)`; sh = lerp(0.35, 0.2, q);
+      // frame "object-position": slide the full-screen video so its subject (x .6, y .38 of the shot) sits in the frame, never uncovering it
+      // (object-fit:cover crops to the element box, so the clamp uses the scaled box, the subject uses the cover content)
+      const sc = RM ? 1 : 1.05, cw = Math.max(W, H * 16 / 9) * sc, ch = Math.max(H, W * 9 / 16) * sc, bl = W / 2 - W * sc / 2, bt = H * 0.4 - H * 0.4 * sc, bw = W * sc, bh = H * sc;
+      const vl = W / 2 - cw / 2, vt = bt + (bh - ch) / 2;
+      const dx = clamp((r.left + r.right) / 2 - (vl + 0.6 * cw), Math.min(0, r.right - (bl + bw)), Math.max(0, r.left - bl)), dy = clamp((r.top + r.bottom) / 2 - (vt + 0.38 * ch), Math.min(0, Math.min(H, r.bottom) - (bt + bh)), Math.max(0, Math.max(0, r.top) - bt));
+      vt2 = `translate3d(${(dx * q).toFixed(1)}px,${(dy * q).toFixed(1)}px,0) scale(${sc})`;
     }
   } else { wPrev = now; wt = 0; }
+  if (vt2 !== lastVt) { lastVt = vt2; v.style.transform = vt2; }
   if (clip !== lastClip) { lastClip = clip; vbox.style.clipPath = clip; vbox.style.webkitClipPath = clip; }
   if (Math.abs(sh - lastSh) > 0.002) { lastSh = sh; shade.style.opacity = sh.toFixed(3); }
   // repo stage: swap when the second project's text crosses the middle
