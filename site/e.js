@@ -1,4 +1,4 @@
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, lastSeen, coverImg, tickTimes, startTicker, h, ago } from "./core.js";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js";
 import { popUpdate } from "./pop.js";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
@@ -28,15 +28,31 @@ else { const io = new IntersectionObserver((es) => es.forEach((x) => { if (x.isI
 
 // ---- boot log, typed: 18-24 ms per char, 120 ms between lines, ~1.9 s; any key or click skips
 const nickT = $("nickT"), caret = $("caret"), nickEl = $("nick"); chars(nickT); nickT.removeAttribute("aria-label");
+nickT.dataset.t = nickT.textContent.replace(/\u00a0/g, " ");
 let typing = [];
 function typeNick() {
   typing.forEach(clearTimeout); typing = []; caret.classList.remove("dim");
   const cs = [...nickT.children];
   if (RM) { cs.forEach((c) => c.classList.add("on")); return; }
   cs.forEach((c) => c.classList.remove("on"));
-  cs.forEach((c, i) => typing.push(setTimeout(() => c.classList.add("on"), 80 + i * 45)));
+  const R = nickT.getBoundingClientRect().right, gap = (i) => R - (i < 0 ? cs[0].getBoundingClientRect().left : cs[i].getBoundingClientRect().right);
+  caretX = -gap(-1); lastPx = "";
+  cs.forEach((c, i) => typing.push(setTimeout(() => { c.classList.add("on"); caretX = -gap(i); lastPx = ""; }, 80 + i * 45)));
   typing.push(setTimeout(() => caret.classList.add("dim"), 80 + cs.length * 45 + 3000));
+  typing.push(setTimeout(sweep, 80 + cs.length * 45 + 900));
 }
+// ---- nick: a soft amber light passes over the letters every ~7 s while the hero is on screen
+let swT = 0;
+function sweep() {
+  clearTimeout(swT);
+  if (RM) return;
+  if (!document.hidden && pinned(hero) < 0.4) { nickT.classList.remove("sw"); void nickT.offsetWidth; nickT.classList.add("sw"); }
+  swT = setTimeout(sweep, 7000);
+}
+nickT.addEventListener("animationend", () => nickT.classList.remove("sw"));
+// cursor parallax target (desktop only); applied in frame()
+let pxT = 0, pyT = 0, px = 0, py = 0, lastPx = "", caretX = 0;
+if (!RM && matchMedia("(hover:hover) and (pointer:fine)").matches) addEventListener("pointermove", (e) => { pxT = (e.clientX / innerWidth - 0.5) * 2; pyT = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
 function boot() {
   const box = $("boot"), log = $("bootLog");
   if (RM || new URLSearchParams(location.search).has("noboot")) { box.classList.add("done"); box.style.display = "none"; typeNick(); return; }
@@ -76,7 +92,7 @@ if ("IntersectionObserver" in window) {
 hud.addEventListener("focusin", () => hud.classList.remove("hide"));
 
 // ---- scroll scene: hero exit, sticky repo stage, the bridge slit, the 4:5 window in contacts
-const hero = $("top"), bridge = $("bridge"), ping = $("ping"), win = $("win"), stage = document.querySelector(".stage"), caps = [...document.querySelectorAll(".stage-c span")];
+const hero = $("top"), bridge = $("bridge"), ping = $("ping"), win = $("win"), stage = document.querySelector(".stage");
 const pjs = [...document.querySelectorAll(".pj")];
 let lastClip = "", lastSh = -1, lastNk = "", cur = 0;
 // window tween: 0 = slit, 1 = 4:5 frame; time-based 900 ms io easing
@@ -90,6 +106,9 @@ function frame(now) {
   const hp = pinned(hero), k = RM ? 0 : ease.out(clamp(hp / 0.85));
   const nk = `translateY(-100%) translate3d(0,${(-k * 30).toFixed(2)}vh,0) scale(${(1 - 0.08 * k).toFixed(4)})|${(1 - clamp((hp - 0.55) / 0.35)).toFixed(3)}`;
   if (nk !== lastNk) { lastNk = nk; const [tr, op] = nk.split("|"); nickEl.style.transform = tr; nickEl.style.opacity = op; }
+  px += (pxT - px) * 0.06; py += (pyT - py) * 0.06;
+  const pk = hp < 1 ? `${(px * 10).toFixed(2)}|${(py * 6).toFixed(2)}|${caretX.toFixed(1)}` : lastPx;
+  if (pk !== lastPx) { lastPx = pk; const x = (px * 10).toFixed(2), y = (py * 6).toFixed(2); nickT.style.transform = `translate3d(${x}px,${y}px,0)`; caret.style.transform = `translate3d(${(+x + caretX).toFixed(2)}px,${y}px,0)`; }
   let sh = 0.45 + 0.4 * k, clip = "inset(0px 0px 0px 0px)";
   v.style.transform = RM ? "" : `scale(${(1 + 0.05 * k).toFixed(4)})`;
   // bridge: full screen -> 2px slit
@@ -114,7 +133,7 @@ function frame(now) {
   // repo stage: swap when the second project's text crosses the middle
   if (!mob && pjs[1]) {
     const n = pjs[1].getBoundingClientRect().top < H * 0.5 ? 1 : 0;
-    if (n !== cur) { caps[cur].classList.remove("on"); caps[cur].classList.toggle("up", n > cur); cur = n; caps[n].classList.remove("up"); caps[n].classList.add("on"); stage.classList.toggle("s1", n === 1); }
+    if (n !== cur) { cur = n; stage.classList.toggle("s1", n === 1); }
   }
   requestAnimationFrame(frame);
 }
@@ -129,48 +148,5 @@ pushedDates();
 smooth(0.08);
 $("toTop").addEventListener("click", () => { setTimeout(typeNick, RM ? 0 : 900); });
 
-// ---- Discord ticker: one line, never empty
-const tk = $("tk"), WORD = { online: "в сети", idle: "отошёл", dnd: "не беспокоить", offline: "не в сети" }, KIND = { music: "слушаю", game: "играю", ide: "пишу код", other: "запущено" };
-let tkKey = "";
-const clean = (t) => String(t || "").replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu, "").replace(/\s{2,}/g, " ").trim();
-function row(dotS, parts, opts = {}) {
-  const r = h("div", "tk-r"), cv = h("span", "tk-cv"), l = h("div", "tk-l");
-  if (opts.track) r.dataset.track = "";
-  if (dotS) { const d = h("span", "dot"); d.dataset.s = dotS; l.appendChild(d); }
-  parts.forEach(([cls, txt, data]) => { const s = h("span", cls, clean(txt)); if (data) Object.assign(s.dataset, data); l.appendChild(s); });
-  const hasArt = opts.art && opts.art.length;
-  if (!hasArt) r.classList.add("na");
-  r.append(...(hasArt ? [cv, l] : [l]));
-  if (opts.track) { const b = h("i", "tk-bar"), bb = h("b"); bb.dataset.bar = ""; b.appendChild(bb); r.appendChild(b); }
-  if (hasArt) coverImg(opts.art, opts.alt || "").then((im) => { if (im) cv.appendChild(im); else cv.classList.add("none"); });
-  return r;
-}
-function renderTk(m) {
-  const acts = m.live ? (m.activities || []) : [], on = m.live && m.status !== "offline";
-  const music = acts.find((a) => a.kind === "music"), other = acts.find((a) => a !== music && a.kind !== "music");
-  const ls = lastSeen(m);
-  const key = JSON.stringify([m.live, m.status, music && [music.title, music.start, music.end], other && [other.app, other.start], !on && ls && ls.at, m.name ? 1 : 0]);
-  if (key === tkKey) return; tkKey = key;
-  const rows = [];
-  if (!m.live && !m.name) rows.push(row("", [["", "подключаюсь к Discord…"]]));
-  else if (on) {
-    const st = m.status;
-    if (music) {
-      const ps = [["", KIND.music], ["tk-t", `${music.title}${music.sub ? " — " + music.sub : ""}`]];
-      if (music.end > music.start) ps.push(["tk-tm", "", { start: music.start, end: music.end }]);
-      rows.push(row(st, ps, { track: music.end > music.start, art: music.art, alt: `Обложка: ${music.title}` }));
-    }
-    if (other) { const ps = [["", KIND[other.kind] || "запущено"], ["tk-t", other.app + (other.sub ? " · " + other.sub : "")]]; if (other.start) ps.push(["tk-tm", "", { start: other.start }]); rows.push(row(music ? "" : st, ps, { art: other.art, alt: other.app })); }
-    if (!rows.length) rows.push(row(st, [["tk-t", WORD[st] || "в сети"], ["", "· ничего не запущено"]]));
-  } else {
-    const was = ls ? `был ${ago(ls.at)}` : "";
-    const ps = [["tk-t", m.live ? "не в сети" : "Discord не ответил"]]; if (was) ps.push(["", "· " + was, ls ? { ago: ls.at } : null]);
-    rows.push(row("offline", ps));
-    if (ls && ls.act && ls.act.title) rows.push(row("", [["", ls.act.kind === "music" ? "последний трек" : "последнее"], ["tk-t", ls.act.title + (ls.act.sub ? " — " + ls.act.sub : "")]], { art: ls.act.art, alt: `Обложка: ${ls.act.title}` }));
-  }
-  tk.replaceChildren(...rows); tickTimes(tk);
-  tk.querySelectorAll("[data-ago]").forEach((e) => { const at = +e.dataset.ago; e.removeAttribute("data-ago"); e.dataset.was = at; e.textContent = "· был " + ago(at); });
-}
-renderTk({ live: false, status: "unknown", activities: [] });
-watch((m) => { renderTk(m); popUpdate(m); }); startTicker(tk);
-setInterval(() => tk.querySelectorAll("[data-was]").forEach((e) => { e.textContent = "· был " + ago(+e.dataset.was); }), 60000);
+// ---- Discord: the profile card lives inline in the contacts column (pop.js)
+watch(popUpdate);

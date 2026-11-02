@@ -1,20 +1,14 @@
-// Discord-style profile popout: hover (desktop) / tap sheet (touch) on the discord row + ticker.
-// The card is prebuilt and its images preloaded whenever presence changes, so opening never flashes.
+// Discord-style profile card, shown inline in the contacts column (no popout).
+// Rebuilt only when the visible data changes; decoded images are cached so live updates never flash.
 import { CFG } from "./presence.js";
-import { RM, h, coverImg, tickTimes, lastSeen, ago } from "./core.js";
+import { h, coverImg, tickTimes, lastSeen, ago } from "./core.js";
 
 const clean = (t) => String(t || "").replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu, "").replace(/\s{2,}/g, " ").trim();
 const ST = { online: "в сети", idle: "отошёл", dnd: "не беспокоить", offline: "не в сети" };
 const HEAD = { music: "слушает", game: "играет", ide: "пишет код", other: "запущено" };
 const img = (u) => CFG.img + "?u=" + encodeURIComponent(u);
-const sheetMQ = matchMedia("(max-width: 820px), (pointer: coarse)");
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const OPEN_DELAY = 260, CLOSE_DELAY = 240, OUT_MS = 110;
-
-let model = null, raw = null, rawAt = 0, rawP = null, open = false, anchor = null, tIn = 0, tOut = 0, tHide = 0, lastFocus = null, built = "", pend = [], seq = 0;
-const bk = h("div", "dp-bk"), card = h("div", "dp");
-card.id = "dp"; card.setAttribute("role", "dialog"); card.setAttribute("aria-label", "Профиль Discord: relocpe"); card.hidden = true; bk.hidden = true;
-document.body.append(bk, card);
+let model = null, raw = null, rawAt = 0, rawP = null, built = "", pend = [];
+const card = document.getElementById("dp");
 
 // ---- image cache: one decoded <img> per source list, reused across rebuilds (no re-pop)
 const IMG = new Map();
@@ -111,83 +105,16 @@ function build() {
   else if (ls) { const s = h("section", "dp-act dp-q"), p = h("p", "dp-s"); p.dataset.was = ls.at; p.textContent = ago(ls.at); s.append(h("p", "dp-h", "был в сети"), p); bd.append(s); if (ls.act && ls.act.title) bd.append(actBlock(ls.act, true)); }
   const msg = h("a", "dp-msg"); msg.href = "https://discord.com/users/" + CFG.id; msg.target = "_blank"; msg.rel = "noopener"; msg.append(h("span", "", "написать @relocpe"), h("span", "dp-ar2", "↗"));
   bd.append(msg);
-  const x = h("button", "dp-x"); x.type = "button"; x.setAttribute("aria-label", "Закрыть"); x.textContent = "×"; x.addEventListener("click", () => hide(true));
-  card.replaceChildren(...nodes, bd, x);
+  card.replaceChildren(...nodes, bd);
   tickTimes(card);
 }
 
-// keep a measured card off-screen-invisible but laid out, so its size is known before showing
-function place(keepY) {
-  if (card.classList.contains("sheet")) { card.style.left = card.style.top = ""; return; }
-  const r = anchor.getBoundingClientRect(), W = innerWidth, H = innerHeight, w = card.offsetWidth, ht = card.offsetHeight, m = 12, g = 14;
-  let x = r.right + g, side = "l";
-  if (x + w > W - m) { x = r.left - w - g; side = "r"; }
-  if (x < m) { x = Math.max(m, Math.min(W - w - m, r.left)); side = "t"; }
-  let y = side === "t" ? r.bottom + g : r.top - 8;
-  if (side === "t" && y + ht > H - m) y = r.top - ht - g;
-  y = Math.max(m, Math.min(H - ht - m, y));
-  card.style.left = Math.round(x) + "px"; card.style.top = Math.round(y) + "px";
-  const oy = Math.round(Math.max(0, Math.min(ht, r.top + r.height / 2 - y)));
-  card.style.transformOrigin = side === "l" ? `0 ${oy}px` : side === "r" ? `100% ${oy}px` : "50% 0";
-}
-
-async function show(a) {
-  clearTimeout(tOut); clearTimeout(tHide);
-  if (open) { if (!sheetMQ.matches) return; } // same profile: keep it where it is
-  const my = ++seq; open = true; anchor = a; lastFocus = document.activeElement;
-  const sheet = sheetMQ.matches;
-  // data first: raw (names/decoration) + images, capped so a slow network never blocks the hover
-  if (!raw) await Promise.race([getRaw(), sleep(250)]);
-  build();
-  if (pend.length) await Promise.race([Promise.all(pend), sleep(300)]);
-  if (my !== seq || !open) return;
-  card.classList.remove("on", "out"); bk.classList.remove("on");
-  card.classList.toggle("sheet", sheet); bk.hidden = !sheet;
-  card.hidden = false; place();
-  card.getBoundingClientRect(); // commit the closed state at the final position
-  requestAnimationFrame(() => { if (my === seq && open) { card.classList.add("on"); bk.classList.add("on"); } });
-  if (sheet) { document.documentElement.classList.add("dp-lock"); const x = card.querySelector(".dp-x"); x && x.focus({ preventScroll: true }); }
-  triggers.forEach((t) => t.setAttribute("aria-expanded", "true"));
-}
-function hide(refocus) {
-  if (!open) return;
-  open = false; seq++;
-  card.classList.remove("on"); card.classList.add("out"); bk.classList.remove("on"); document.documentElement.classList.remove("dp-lock");
-  triggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
-  clearTimeout(tHide); tHide = setTimeout(() => { if (!open) { card.hidden = true; bk.hidden = true; card.classList.remove("out"); } }, RM ? 0 : OUT_MS + 20);
-  if (refocus && lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
-}
-
-const tkEl = document.getElementById("tk");
-const rowEl = document.querySelector('.row[data-copy="relocpe"]');
-const triggers = [rowEl, tkEl].filter(Boolean);
-if (tkEl) { tkEl.tabIndex = 0; tkEl.setAttribute("role", "button"); tkEl.setAttribute("aria-label", "Статус в Discord — открыть профиль"); }
-const desk = (e) => e.pointerType === "mouse" && !sheetMQ.matches;
-triggers.forEach((t) => {
-  t.setAttribute("aria-haspopup", "dialog"); t.setAttribute("aria-controls", "dp"); t.setAttribute("aria-expanded", "false");
-  t.addEventListener("pointerenter", (e) => { if (!desk(e)) return; clearTimeout(tOut); clearTimeout(tIn); if (!open) { getRaw(); tIn = setTimeout(() => show(t), OPEN_DELAY); } });
-  // hover intent: restart the timer while the pointer is still travelling fast across the trigger
-  t.addEventListener("pointermove", (e) => { if (!desk(e) || open) return; if (Math.abs(e.movementX) + Math.abs(e.movementY) > 14) { clearTimeout(tIn); tIn = setTimeout(() => show(t), OPEN_DELAY); } });
-  t.addEventListener("pointerleave", (e) => { if (!desk(e)) return; clearTimeout(tIn); if (open) tOut = setTimeout(() => hide(), CLOSE_DELAY); });
-  t.addEventListener("click", () => { if (sheetMQ.matches) show(t); });
-  t.addEventListener("focus", () => { if (!sheetMQ.matches && t.matches(":focus-visible")) show(t); });
-  t.addEventListener("blur", () => { if (!sheetMQ.matches) tOut = setTimeout(() => { if (!card.contains(document.activeElement)) hide(); }, 120); });
-});
-if (tkEl) tkEl.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open ? hide() : show(tkEl); } });
-card.addEventListener("pointerenter", () => clearTimeout(tOut));
-card.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && !card.classList.contains("sheet")) tOut = setTimeout(() => hide(), CLOSE_DELAY); });
-card.addEventListener("focusout", (e) => { if (!card.classList.contains("sheet") && !card.contains(e.relatedTarget) && !triggers.includes(e.relatedTarget)) hide(); });
-bk.addEventListener("click", () => hide(true));
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) hide(true); });
-addEventListener("scroll", () => { if (open && !card.hidden && !card.classList.contains("sheet")) place(); }, { passive: true });
-addEventListener("resize", () => { if (open && !card.hidden) { card.classList.toggle("sheet", sheetMQ.matches); bk.hidden = !sheetMQ.matches; place(); } });
-setInterval(() => { if (open && !document.hidden) { tickTimes(card); card.querySelectorAll("[data-was]").forEach((e) => { e.textContent = ago(+e.dataset.was); }); } }, 1000);
+setInterval(() => { if (!document.hidden) { tickTimes(card); card.querySelectorAll("[data-was]").forEach((e) => { e.textContent = ago(+e.dataset.was); }); } }, 1000);
 
 let primed = false;
 export function popUpdate(m) {
   model = m;
-  if (!primed && (m.live || m.name)) { primed = true; getRaw().then(() => { build(); if (open && !card.hidden) place(); }); }
-  build(); // prebuild + preload images while closed
-  if (open && !card.hidden) place();
+  if (!primed && (m.live || m.name)) { primed = true; getRaw().then(build); }
+  build();
 }
 build();
