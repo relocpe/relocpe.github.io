@@ -92,18 +92,14 @@ function boot() {
 }
 boot();
 
-// ---- header: hide on scroll down, show on scroll up; active section dot; progress line
-const hud = $("hud"), progB = $("progB"), navs = [...document.querySelectorAll(".hud-nav a")];
+// ---- header: hide on scroll down, show on scroll up; progress line
+const hud = $("hud"), progB = $("progB");
 let lastY = 0, acc = 0;
 function hudTick(y) {
   const d = y - lastY; lastY = y;
   if (y < 80) { hud.classList.remove("hide"); acc = 0; return; }
   acc = Math.sign(d) === Math.sign(acc) ? acc + d : d;
   if (acc > 24) hud.classList.add("hide"); else if (acc < -24) hud.classList.remove("hide");
-}
-if ("IntersectionObserver" in window) {
-  const io = new IntersectionObserver((es) => es.forEach((x) => { const a = navs.find((n) => n.dataset.sec === x.target.id); if (a) a.classList.toggle("on", x.isIntersecting); }), { rootMargin: "-45% 0px -45% 0px" });
-  ["work", "ping"].forEach((id) => io.observe($(id)));
 }
 hud.addEventListener("focusin", () => hud.classList.remove("hide"));
 

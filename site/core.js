@@ -27,7 +27,7 @@ export function bgVideo(v) {
 // ---- sound: first real gesture or the toggle unmutes with a fade to 0.3; "off" remembered per session
 export function sound(v, btn, { label, analyse = false, onChange } = {}) {
   const VOL = 0.3; let ctx = null, gain = null, an = null, raf = 0, armed = true, off = false;
-  try { off = sessionStorage.getItem("relocpe.snd") === "off"; } catch {}
+  try { off = localStorage.getItem("relocpe.snd") === "off"; } catch {}
   const setVol = (x) => { if (gain) { gain.gain.value = x; v.volume = 1; } else v.volume = x; };
   const ui = () => { const on = !v.muted; btn.setAttribute("aria-pressed", on ? "true" : "false"); btn.classList.toggle("on", on); if (label) label.textContent = on ? "звук вкл" : "звук выкл"; onChange && onChange(on); };
   const graph = () => {
@@ -41,13 +41,25 @@ export function sound(v, btn, { label, analyse = false, onChange } = {}) {
   const fadeIn = () => { cancelAnimationFrame(raf); const t0 = performance.now(); setVol(0); const f = (t) => { const k = clamp((t - t0) / 1200); setVol(VOL * k * k * (3 - 2 * k)); if (k < 1) raf = requestAnimationFrame(f); }; raf = requestAnimationFrame(f); };
   const on = () => { graph(); if (ctx && ctx.state !== "running") ctx.resume().catch(() => {}); v.muted = false; setVol(0); const p = v.play(); if (p && p.then) p.then(fadeIn, () => { v.muted = true; ui(); }); else fadeIn(); ui(); };
   const mute = () => { cancelAnimationFrame(raf); v.muted = true; ui(); if (RM) v.pause(); };
-  btn.addEventListener("click", (e) => { e.stopPropagation(); armed = false; if (v.muted || v.paused) { off = false; try { sessionStorage.removeItem("relocpe.snd"); } catch {} on(); } else { off = true; try { sessionStorage.setItem("relocpe.snd", "off"); } catch {} mute(); } });
+  btn.addEventListener("click", (e) => { e.stopPropagation(); armed = false; if (v.muted || v.paused) { off = false; try { localStorage.removeItem("relocpe.snd"); } catch {} on(); } else { off = true; try { localStorage.setItem("relocpe.snd", "off"); } catch {} mute(); } });
+  // first gesture unmutes: wheel/touch/scroll keys don't grant activation everywhere, so act only once the page has it
+  const EV = ["wheel", "touchstart", "touchend", "pointerdown", "pointerup", "keydown", "scroll"], UA = navigator.userActivation;
+  const disarm = () => { armed = false; EV.forEach((t) => removeEventListener(t, first, true)); };
   const first = (e) => {
     if (!armed || off) return; if (e.target && e.target.closest && e.target.closest("[data-nosnd]")) return;
     if (e.type === "keydown" && (e.metaKey || e.ctrlKey || e.altKey)) return;
-    armed = false; ["pointerup", "keydown", "touchend"].forEach((t) => removeEventListener(t, first, true)); on();
+    if (UA ? !UA.hasBeenActive : !/^(pointerup|keydown|touchend)$/.test(e.type)) return;
+    if (!v.muted && !v.paused) { disarm(); return; }
+    disarm(); on();
   };
-  ["pointerup", "keydown", "touchend"].forEach((t) => addEventListener(t, first, { capture: true, passive: true }));
+  EV.forEach((t) => addEventListener(t, first, { capture: true, passive: true }));
+  // try sound straight away; browsers without permission reject, then it stays muted and waits for a gesture
+  if (!off && !RM) {
+    v.muted = false; setVol(VOL);
+    const p = v.play();
+    const back = () => { v.muted = true; v.play().catch(() => {}); ui(); };
+    if (p && p.then) p.then(() => { if (!v.muted) disarm(); ui(); }, back); else if (v.paused) back();
+  }
   v.addEventListener("volumechange", ui); ui();
   // level(): {b,m,hi, live} 0..1 bands; live=false when there is no real signal (muted / no graph)
   const buf = new Uint8Array(256); let sb = 0, sm = 0, sh = 0;
