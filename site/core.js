@@ -1,5 +1,5 @@
 // Shared runtime for previews e/f/g: video, sound, smooth scroll, cursor, Discord presence card.
-import { watch, firstImage, lastSeen, startTicker, tickTimes, copyText, h, ago, STATUS_RU, dominant } from "./presence.js?v=1102a";
+import { watch, firstImage, lastSeen, startTicker, tickTimes, copyText, h, ago, STATUS_RU, dominant } from "./presence.js?v=1102b";
 export { watch, firstImage, lastSeen, startTicker, tickTimes, copyText, h, ago, STATUS_RU, dominant };
 export const $ = (id) => document.getElementById(id);
 export const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;

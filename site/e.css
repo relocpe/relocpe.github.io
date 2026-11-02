@@ -122,13 +122,13 @@ html:not(.js) .ln-i{transform:none}
 
 /* contacts */
 .ping{position:relative;z-index:5;padding:28px var(--m);min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-/* one composed block: [nick · rows · card] | frame, frame = exact height of the left column */
-.ping-g{display:grid;grid-template-columns:minmax(0,520px) minmax(0,440px);grid-template-rows:auto auto;column-gap:clamp(40px,4.5vw,64px);justify-content:center}
+/* contacts on the page gutters: [nick · rows · card] left | big 4:5 frame on the right gutter, both top-aligned at the nick */
+.ping-g{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);grid-template-rows:auto auto;column-gap:clamp(40px,5vw,96px)}
 .ping-g>.sec-h{grid-column:2;grid-row:1;justify-self:end;align-self:end;margin-bottom:8px;font-size:11px}
 .ping-g>.tg-l{grid-column:1;grid-row:1;align-self:end;margin-bottom:8px}
 .ping-l{grid-column:1;grid-row:2;min-width:0}
-.ping-r{grid-column:2;grid-row:2;align-self:stretch;min-width:0}
-.win{width:100%;height:100%}
+.ping-r{grid-column:2;grid-row:2;align-self:start;min-width:0}
+.win{aspect-ratio:4/5;width:min(100%,calc(min(78svh,680px)*.8));margin-left:auto}
 .tg-w{margin:0}
 .tg-l{font-size:11px;color:var(--mid);letter-spacing:.04em}
 .tg{display:inline-block}

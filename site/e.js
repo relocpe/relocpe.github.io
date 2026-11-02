@@ -1,5 +1,5 @@
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1102a";
-import { popUpdate } from "./pop.js?v=1102a";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1102b";
+import { popUpdate } from "./pop.js?v=1102b";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
 sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });

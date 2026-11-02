@@ -1,7 +1,7 @@
 // Discord-style profile card, shown inline in the contacts column (no popout).
 // Rebuilt only when the visible data changes; decoded images are cached so live updates never flash.
-import { CFG } from "./presence.js?v=1102a";
-import { h, coverImg, tickTimes, lastSeen, ago } from "./core.js?v=1102a";
+import { CFG } from "./presence.js?v=1102b";
+import { h, coverImg, tickTimes, lastSeen, ago } from "./core.js?v=1102b";
 
 const clean = (t) => String(t || "").replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu, "").replace(/\s{2,}/g, " ").trim();
 const ST = { online: "в сети", idle: "отошёл", dnd: "не беспокоить", offline: "не в сети" };
