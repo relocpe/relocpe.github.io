@@ -176,12 +176,3 @@ Background video: bg5.mp4 / bg5-720.mp4 / poster5.jpg = bg4* with the first 21.7
   with ffmpeg scene detection, between the 20-25 s the owner asked for); audio trimmed in sync (AAC 128k). Re-encoded from the
   already upscaled bg4 files with the same settings (2560x1440 25 fps, x264 High 2-pass 3.0 Mbps; 720p crf 24 / 1.5 Mbps), no
   new processing. Focus map timestamps shifted by -21.76 s. Everything else as v7.5.
-
-==================== v4 (short index, 2026-11-22) ====================
-Fonts: Inter variable (SIL OFL 1.1, rsms/inter; woff2 latin + cyrillic subsets from @fontsource-variable/inter) — fonts/OFL-Inter.txt.
-       JetBrains Mono variable kept for the nick, labels and meta.
-Project previews (site/pv/*.webp, 640x400): Nimbus — docs/screenshots/windows-dark-main.png from relocpe/Nimbus;
-  Ya.Music-RPC — the existing mini-player shot; Кинорулетка — screenshot of the live relocpe.github.io/kino-roulette/;
-  aether — docs/images/editor.png from relocpe/aether.
-og-image.png: rendered locally from HTML with the two fonts above.
-Background video (bg5*.mp4, poster5.jpg) unchanged.
