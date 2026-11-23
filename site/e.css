@@ -93,12 +93,16 @@ html:not(.js) .ln-i{transform:none}
 .stage{position:relative;aspect-ratio:16/10;width:100%;max-height:68vh}
 .stage .st-l{position:absolute;inset:0;background:var(--bg,#050505);transition:clip-path .7s var(--sw)}
 .st-l[data-l="0"]{clip-path:inset(0)}
-.stage.s1 .st-l[data-l="0"]{clip-path:inset(0 0 100% 0)}
-.st-l[data-l="1"]{clip-path:inset(100% 0 0 0)}
-.stage.s1 .st-l[data-l="1"]{clip-path:inset(0)}
-.stage.s1 .st-l[data-l="0"] .mf-ya{transform:scale(.94) translateY(-3%)}
-.st-l[data-l="1"] .nb{transform:translateY(8%);transition:transform .7s var(--sw)}
-.stage.s1 .st-l[data-l="1"] .nb{transform:none}
+.st-l[data-l="1"],.st-l[data-l="2"],.st-l[data-l="3"]{clip-path:inset(100% 0 0 0)}
+.stage.s1 .st-l[data-l="0"],
+.stage.s2 .st-l[data-l="0"],.stage.s2 .st-l[data-l="1"],
+.stage.s3 .st-l[data-l="0"],.stage.s3 .st-l[data-l="1"],.stage.s3 .st-l[data-l="2"]{clip-path:inset(0 0 100% 0)}
+.stage.s1 .st-l[data-l="1"],
+.stage.s2 .st-l[data-l="2"],
+.stage.s3 .st-l[data-l="3"]{clip-path:inset(0)}
+.stage.s1 .st-l[data-l="0"] .mf-ya,
+.stage.s2 .st-l[data-l="0"] .mf-ya,.stage.s2 .st-l[data-l="1"] .mf-ya,
+.stage.s3 .st-l[data-l="0"] .mf-ya,.stage.s3 .st-l[data-l="1"] .mf-ya,.stage.s3 .st-l[data-l="2"] .mf-ya{transform:scale(.94) translateY(-3%)}
 
 /* media frame: 16:10, B/W, grain */
 .mf{display:block;position:relative;overflow:hidden;background:none;border:0}
@@ -106,7 +110,6 @@ html:not(.js) .ln-i{transform:none}
 .mf-ya{position:absolute;inset:0;display:grid;place-items:center;transition:transform .7s var(--sw)}
 .mf-ya img{position:absolute;left:50%;top:50%;height:84%;width:auto;max-width:90%;object-fit:contain;translate:-50% -50%;filter:grayscale(1) contrast(1.1) brightness(.7);border-radius:10px;transition:transform .9s var(--out)}
 .mf:hover .mf-ya img{transform:scale(1.025)}
-.mf-ya.mf-pair img{height:auto;width:94%;max-width:94%;max-height:92%}
 .mf-g,.nb-g{display:none}
 .nb{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(18px,2.4vw,32px);font-size:12px;line-height:1.75;color:var(--mid)}
 .nb-h{display:flex;justify-content:space-between;gap:16px}

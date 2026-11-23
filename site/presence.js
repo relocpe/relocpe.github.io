@@ -16,6 +16,12 @@ export const PROJECTS = [
   { id: "nimbus", name: "Nimbus", url: "https://github.com/relocpe/Nimbus",
     text: "Запускает zapret из строки меню macOS и области уведомлений Windows: Discord и YouTube без блокировок и без терминала.",
     meta: "C, Swift, C# · macOS 14+ · Windows 10/11 · MIT · v1.3.0", shot: "nimbus.jpg" },
+  { id: "aether", name: "Aether", url: "https://github.com/relocpe/aether",
+    text: "Ставит обои с Wallhaven на рабочий стол Windows и собирает тему из их палитры.",
+    meta: "TypeScript, Rust · Windows · v1.0.0", shot: "aether.jpg" },
+  { id: "kino", name: "kino-roulette", url: "https://github.com/relocpe/kino-roulette",
+    text: "Случайный фильм, сериал или аниме по жанру и настроению.",
+    meta: "JavaScript · сайт", shot: "kino-roulette.jpg" },
 ];
 
 const proxy = (u) => CFG.img + "?u=" + encodeURIComponent(u);

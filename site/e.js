@@ -1,5 +1,5 @@
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1123";
-import { popUpdate } from "./pop.js?v=1123";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1123b";
+import { popUpdate } from "./pop.js?v=1123b";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
 sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });
@@ -142,10 +142,11 @@ function frame(now) {
   if (vt2 !== lastVt) { lastVt = vt2; v.style.transform = vt2; }
   if (clip !== lastClip) { lastClip = clip; vbox.style.clipPath = clip; vbox.style.webkitClipPath = clip; }
   if (Math.abs(sh - lastSh) > 0.002) { lastSh = sh; shade.style.opacity = sh.toFixed(3); }
-  // repo stage: swap when the second project's text crosses the middle
-  if (!mob && pjs[1]) {
-    const n = pjs[1].getBoundingClientRect().top < H * 0.5 ? 1 : 0;
-    if (n !== cur) { cur = n; stage.classList.toggle("s1", n === 1); }
+  // repo stage: swap when the next project's text crosses the middle
+  if (!mob && pjs.length) {
+    let n = 0;
+    for (let i = 1; i < pjs.length; i++) if (pjs[i].getBoundingClientRect().top < H * 0.5) n = i;
+    if (n !== cur) { stage.classList.remove("s" + cur); cur = n; if (n) stage.classList.add("s" + n); }
   }
   requestAnimationFrame(frame);
 }
