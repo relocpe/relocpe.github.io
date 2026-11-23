@@ -12,10 +12,10 @@ export const STATUS_RU = { online: "в сети", idle: "отошёл", dnd: "н
 export const PROJECTS = [
   { id: "ya", name: "Ya.Music-RPC", url: "https://github.com/relocpe/Ya.Music-RPC",
     text: "Показывает трек из Яндекс Музыки в статусе Discord и добавляет мини-плеер в строку меню.",
-    meta: "Swift · macOS, Apple Silicon · MIT", shot: "ya-music-rpc.jpg" },
+    meta: "Swift · macOS 13+, Apple Silicon · MIT · v1.0.0", shot: "ya-music-rpc.jpg" },
   { id: "nimbus", name: "Nimbus", url: "https://github.com/relocpe/Nimbus",
-    text: "Оболочка для zapret в строке меню: Discord и YouTube без блокировок и без терминала.",
-    meta: "C, Swift · macOS 14+ · MIT" },
+    text: "Запускает zapret из строки меню macOS и области уведомлений Windows: Discord и YouTube без блокировок и без терминала.",
+    meta: "C, Swift, C# · macOS 14+ · Windows 10/11 · MIT · v1.3.0", shot: "nimbus.jpg" },
 ];
 
 const proxy = (u) => CFG.img + "?u=" + encodeURIComponent(u);

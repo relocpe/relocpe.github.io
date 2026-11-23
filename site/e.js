@@ -1,21 +1,12 @@
-import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1102b";
-import { popUpdate } from "./pop.js?v=1102b";
+import { $, RM, COARSE, clamp, lerp, ease, S, bgVideo, sound, smooth, through, pinned, cursor, copies, chars, pushedDates, watch, h } from "./core.js?v=1123";
+import { popUpdate } from "./pop.js?v=1123";
 
 const v = bgVideo($("v")), vbox = $("vbox"), shade = $("shade");
 sound(v, $("snd"), { onChange: (on) => { $("sndL").textContent = on ? "звук: вкл" : "звук: выкл"; } });
 const tile = (() => { try { const n = 180, c = document.createElement("canvas"); c.width = c.height = n; const g = c.getContext("2d"), d = g.createImageData(n, n); for (let i = 0; i < d.data.length; i += 4) { const x = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = x; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); return `url(${c.toDataURL()})`; } catch { return ""; } })();
 document.querySelector(".grain").style.backgroundImage = tile;
 
-// ---- Nimbus visual: the real strategy list from macos/Payload/strategies.tsv, set as type
-const STRAT = ["general", "general (ALT)", "general (ALT2)", "general (ALT3)", "general (ALT4)", "general (ALT5)", "general (ALT6)", "general (ALT7)", "general (ALT8)", "general (ALT9)", "general (ALT10)", "general (ALT11)", "general (ALT12)", "general (EXP)", "general (FAKE TLS AUTO)", "general (FAKE TLS AUTO ALT)", "general (FAKE TLS AUTO ALT2)", "general (FAKE TLS AUTO ALT3)", "general (SIMPLE FAKE)", "general (SIMPLE FAKE ALT)", "general (SIMPLE FAKE ALT2)"];
-document.querySelectorAll("[data-nimbus]").forEach((a) => {
-  const nb = h("div", "nb"), hd = h("div", "nb-h"), ul = h("ul", "nb-l");
-  hd.append(h("b", "", "zapret · стратегии"), h("span", "", `${STRAT.length}`));
-  STRAT.forEach((s, i) => { const li = h("li", i === 1 ? "on" : "", s); ul.appendChild(li); });
-  nb.append(hd, ul, h("p", "nb-f", "./macos/build.sh"));
-  const g = h("i", "nb-g"); a.append(nb, g);
-});
-document.querySelectorAll(".mf-g,.nb-g").forEach((g) => { g.style.backgroundImage = tile; });
+document.querySelectorAll(".mf-g").forEach((g) => { g.style.backgroundImage = tile; });
 
 // ---- line masks: every [data-ln] rises out of its own mask, staggered 70 ms inside its [data-lg] group
 document.querySelectorAll("[data-lg]").forEach((g) => {

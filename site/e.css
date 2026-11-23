@@ -106,6 +106,7 @@ html:not(.js) .ln-i{transform:none}
 .mf-ya{position:absolute;inset:0;display:grid;place-items:center;transition:transform .7s var(--sw)}
 .mf-ya img{position:absolute;left:50%;top:50%;height:84%;width:auto;max-width:90%;object-fit:contain;translate:-50% -50%;filter:grayscale(1) contrast(1.1) brightness(.7);border-radius:10px;transition:transform .9s var(--out)}
 .mf:hover .mf-ya img{transform:scale(1.025)}
+.mf-ya.mf-pair img{height:auto;width:94%;max-width:94%;max-height:92%}
 .mf-g,.nb-g{display:none}
 .nb{position:absolute;inset:0;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(18px,2.4vw,32px);font-size:12px;line-height:1.75;color:var(--mid)}
 .nb-h{display:flex;justify-content:space-between;gap:16px}
